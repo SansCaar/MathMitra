@@ -24,13 +24,13 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card
-        className="w-full max-w-md shadow-lg "
-        style={{
-          padding: 16,
-        }}
-      >
-        <CardHeader className="space-y-2 pb-6 px-8 pt-8">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader
+          className="space-y-2 pb-6 px-8 pt-8"
+          style={{
+            padding: 10,
+          }}
+        >
           <CardTitle className="text-2xl font-bold tracking-tight text-center">
             Welcome back
           </CardTitle>
@@ -44,38 +44,27 @@ export default function LoginForm() {
               Email
             </Label>
             <div className="relative">
-              {/* <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" /> */}
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
                 className="pl-10 h-12 w-full"
                 required
-                style={{
-                  paddingLeft: 16,
-                }}
               />
             </div>
           </div>
-          <div
-            className="space-y-3"
-            style={{
-              marginTop: 12,
-            }}
-          >
+          <div className="space-y-3">
             <Label htmlFor="password" className="text-sm font-medium">
               Password
             </Label>
             <div className="relative">
-              {/* <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" /> */}
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                className="pl-10 pr-10 h-12 w-full "
-                style={{
-                  paddingLeft: 16,
-                }}
+                className="pl-10 pr-10 h-12 w-full"
                 required
               />
               <button
@@ -91,12 +80,7 @@ export default function LoginForm() {
               </button>
             </div>
           </div>
-          <div
-            className="flex items-center justify-between text-sm pt-2"
-            style={{
-              marginTop: 12,
-            }}
-          >
+          <div className="flex items-center justify-between text-sm pt-2">
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -112,21 +96,11 @@ export default function LoginForm() {
             </a>
           </div>
         </CardContent>
-        <CardFooter
-          className="flex flex-col space-y-4 pt-4 px-8 pb-8"
-          style={{
-            marginTop: 12,
-          }}
-        >
+        <CardFooter className="flex flex-col space-y-4 pt-4 px-8 pb-8">
           <Button className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-medium">
             Sign in
           </Button>
-          <div
-            className="text-center text-sm text-slate-600 pt-2"
-            style={{
-              marginTop: 12,
-            }}
-          >
+          <div className="text-center text-sm text-slate-600 pt-2">
             {"Don't have an account? "}
             <a
               href="#"
