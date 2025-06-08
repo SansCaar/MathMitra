@@ -1,9 +1,7 @@
-import Canvas from "../src/components/canvas/";
-
 export default function Home() {
   return (
     <div >
-      <Canvas />
+      Vai ka aako?  Ja aye ni canvas chalauna painxa. Playground ma jau
     </div>
   );
 }
