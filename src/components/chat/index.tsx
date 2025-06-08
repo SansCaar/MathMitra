@@ -5,8 +5,10 @@ import { v4 as uuid } from "uuid";
 import BottomInputSection from "./bottom-input-section";
 import { Mic, SendHorizontal } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { getImageBlob, getImageDataUrl} from "@dgmjs/export"
+import { getImageBlob, getImageDataUrl } from "@dgmjs/export";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
+import { io } from "socket.io-client";
+import { sockets } from "@src/express/server";
 
 const ChatArea = ({}) => {
   const chat = useAtomValue(ChatAtom);
@@ -14,23 +16,32 @@ const ChatArea = ({}) => {
 
   const canvasEditor = useAtomValue(CanvasAtom);
 
-  const exportImage =async () => {
+  const exportImage = async () => {
     if (!canvasEditor) return;
-    const dataImage=await getImageDataUrl(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
+    const dataImage = await getImageDataUrl(
+      canvasEditor.canvas,
+      canvasEditor.getPages()[0],
+      [],
+      { scale: 0.5 },
+    );
     console.log(dataImage);
-  }
-  const exportImageBlob =async () => {
+  };
+  const exportImageBlob = async () => {
     if (!canvasEditor) return;
-    const dataImage=await getImageBlob(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
+    const dataImage = await getImageBlob(
+      canvasEditor.canvas,
+      canvasEditor.getPages()[0],
+      [],
+      { scale: 0.5 },
+    );
     console.log(dataImage);
-  }
+  };
 
-  const exportJsonPaths = async ()=> {
+  const exportJsonPaths = async () => {
     if (!canvasEditor) return;
-  const json = await canvasEditor.saveToJSON()
+    const json = await canvasEditor.saveToJSON();
     console.log(json);
-
-  }
+  };
 
   const addMessage = ({
     message,
@@ -76,9 +87,10 @@ const ChatArea = ({}) => {
           );
         })}
       </div>
+
       {/*  bottom input section with three buttons first mic second text input and third send */}
       <div className="w-full flex py-4 gap-2">
-        <button className="h-full  aspect-square flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button className="h-full aspect-square flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           <Mic className=" h-full " />
         </button>
         <BottomInputSection />
@@ -88,6 +100,15 @@ const ChatArea = ({}) => {
               console.log(chat);
               exportImage();
               exportJsonPaths();
+              const socket = io("http://localhost:3001/chat");
+
+              socket.on("connect", () => {
+                console.log("socket connected");
+              });
+
+              socket.on("message", (m) => {
+                console.log(m);
+              });
               addMessage({
                 user: "GPT",
                 message: "Hello",
