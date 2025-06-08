@@ -10,13 +10,43 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://root:root@cluster0.hdzy8td.mongodb.net/name"
+  url      = "mongodb+srv://root:root@cluster0.miub5gw.mongodb.net/mathsmitra"
 }
 
-model User{
+model Student{
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
   email   String   @unique
   name    String?
   password String
-
+  role      String?
+  classes     Json?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 }
+
+model Teacher{
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  email   String   @unique
+  name    String?
+  password String
+  role      String?
+  classes     Json?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Classes{
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String?
+  subject    String?
+  section    String?
+  description String?
+  studentsCount Int?
+  assignmentsCount Int?
+  createdAt   DateTime? @default(now()) 
+  updatedAt   DateTime? @updatedAt
+  teacherId String?
+  studentId Json?
+}
+
+
