@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.3",
 =======
     "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/react-katex": "^3.0.4",
 >>>>>>> 1d67a83 (feat: added `generateAnswer` and `generateAnswerStream` functions.)
@@ -27,7 +28,10 @@
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+<<<<<<< HEAD
     "jotai": "^2.12.5",
+=======
+>>>>>>> ce4775a (wip: adding a custom express server.)
     "jsonwebtoken": "^9.0.2",
     "katex": "^0.16.22",
     "lucide-react": "^0.513.0",
@@ -37,8 +41,12 @@
     "react-dom": "^19.0.0",
     "react-katex": "^3.1.0",
     "socket.io": "^4.8.1",
+<<<<<<< HEAD
     "tailwind-merge": "^3.3.0",
     "uuid": "^11.1.0"
+=======
+    "tailwind-merge": "^3.3.0"
+>>>>>>> ce4775a (wip: adding a custom express server.)
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
