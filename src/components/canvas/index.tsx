@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Toolbar } from "./toolbar";
 import { Palette } from "./pallete";
 import { cn } from "@src/utils/cn";
+import { CanvasAtom } from "@src/atoms/CanvasAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 
 declare global {
   interface Window {
@@ -14,7 +16,9 @@ declare global {
 }
 
 function Canvas({ className, ...props }: DGMEditorProps) {
-  const [editor, setEditor] = useState<Editor | null>(null);
+  const editor = useAtomValue(CanvasAtom);
+  const setEditor =useSetAtom(CanvasAtom);
+
   const [activeHandler, setActiveHandler] = useState<string>("Select");
 
   const handleMount = async (editor: Editor) => {
