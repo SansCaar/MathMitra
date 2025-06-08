@@ -1,9 +1,15 @@
-import TextToLatex from "./components/textToLatex";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
-      <TextToLatex />
+    <div className="flex flex-col items-center h-screen justify-center text-gray-200 gap-2.5">
+      Only playground is ready here.
+      <Link
+        href={"/playground"}
+        className="bg-orange-500 text-orange-100 px-5 py-2 rounded-md"
+      >
+        Go to playground
+      </Link>
     </div>
   );
 }

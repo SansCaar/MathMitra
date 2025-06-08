@@ -1,10 +1,14 @@
-import React from 'react';
-import Canvas from "../../src/components/canvas";
+import ChatArea from "@components/chat";
+import Canvas from "@components/canvas";
+import React from "react";
 
-const Playground= () => {
+const Playground = () => {
   return (
-      <Canvas/>
-  )
-}
+    <div className="flex w-full h-full">
+      <Canvas showGrid className="flex-1"/>;
+      <ChatArea />
+    </div>
+  );
+};
 
-export default Playground
+export default Playground;
