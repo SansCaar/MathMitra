@@ -1,3 +1,4 @@
+import { Editor } from "@dgmjs/core";
 import { atom } from "jotai";
 
 type TQuestion = {
@@ -21,7 +22,10 @@ type TChatAtom  ={
   messages: TMessage[] | [];
   userId: string;
   current?:TMessage;
+  snapshot?: Blob;
 }
+
+
 
 const ChatAtom = atom<TChatAtom>(
   {
