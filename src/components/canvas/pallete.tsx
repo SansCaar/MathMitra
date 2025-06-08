@@ -75,12 +75,6 @@ export function Palette({ onPropsChange }: PaletteProps) {
           XL
         </Button>
       </div>
-
-      <div className="flex text-base px-2">
-        <a href="https://dgm.sh" target="_blank" className="underline">
-          more...
-        </a>
-      </div>
     </div>
   );
 }
