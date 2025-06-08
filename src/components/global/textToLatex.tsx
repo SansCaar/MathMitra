@@ -9,7 +9,7 @@ export default function TextToLatex() {
   const convertToLatex = (text: string) => {
     // Split the text into parts: math expressions and regular text
     const parts = text.split(
-      /(\d+[+\-*/^()\s]+\d+|\w+\^\d+|\w+_\d+|\d+\/\d+|sqrt\([^)]+\))/g
+      /(\d+[+\-*/^()\s]+\d+|\w+\^\d+|\w+_\d+|\d+\/\d+|sqrt\([^)]+\))/g,
     );
 
     return parts.map((part, index) => {
