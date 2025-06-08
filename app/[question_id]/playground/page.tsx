@@ -5,7 +5,7 @@ import React from "react";
 const Playground = () => {
   return (
     <div className="flex w-full h-full">
-      <Canvas showGrid className="flex-1"/>;
+      <Canvas showGrid className="flex-1"/>
       <ChatArea />
     </div>
   );

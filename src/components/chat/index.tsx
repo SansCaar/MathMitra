@@ -5,17 +5,16 @@ import { v4 as uuid } from "uuid";
 import BottomInputSection from "./bottom-input-section";
 import { Mic, SendHorizontal } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { io } from "socket.io-client";
 
 const ChatArea = ({}) => {
   const chat = useAtomValue(ChatAtom);
   const setChat = useSetAtom(ChatAtom);
 
-  const addMessage = ({ message, user }: { message: string; user: string }) => {
+  const addMessage = ({ message, user, response }: { message: string; user: string, response?: string }) => {
     setChat((prev) => {
       return {
         ...prev,
-        messages: [...prev.messages, { id: uuid(), message, userId: user }],
+        messages: [...prev.messages, { id: uuid(), message, userId: user, response }],
       };
     });
   };
@@ -33,9 +32,6 @@ const ChatArea = ({}) => {
           <button
             onClick={() => {
               console.log(chat);
-              io("http://localhost:3001/chat").on("connect", () => {
-                console.log("socket connected");
-              });
               addMessage({
                 user: "GPT",
                 message: "Hello",

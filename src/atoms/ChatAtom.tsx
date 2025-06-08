@@ -10,7 +10,9 @@ type TQuestion = {
 type TMessage = {
   id: string;
   message: string;
+  response?: string;
   userId: string;
+  interupted?: boolean;
 }
 
 type TChatAtom  ={
