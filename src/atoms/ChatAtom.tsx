@@ -8,7 +8,7 @@ type TQuestion = {
   } | undefined;
 
 
-type TMessage = {
+export type TMessage = {
   id: string;
   message: string;
   response?: string;
