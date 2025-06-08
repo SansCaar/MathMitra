@@ -7,6 +7,8 @@ const ChatArea = () => {
     <div className="flex-1 h-full">
      chatArea
     </div>
+     {/*  bottom input section with three buttons first mic second text input and third send */}
+    <div className="h-full w-full flex flex-col"></div>
     <BottomInputSection />
   </div>
 }
