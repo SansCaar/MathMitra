@@ -11,6 +11,8 @@
   "dependencies": {
     "@dgmjs/core": "^1.0.0",
     "@dgmjs/react": "^1.0.0",
+    "@google/genai": "^1.4.0",
+    "@next/env": "^15.3.3",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
