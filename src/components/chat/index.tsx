@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import BottomInputSection from "./bottom-input-section";
 import { Mic, SendHorizontal } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { getImageDataUrl} from "@dgmjs/export"
+import { getImageBlob, getImageDataUrl} from "@dgmjs/export"
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 
 const ChatArea = ({}) => {
@@ -16,10 +16,21 @@ const ChatArea = ({}) => {
 
   const exportImage =async () => {
     if (!canvasEditor) return;
-    const dataImage=await getImageDataUrl(canvasEditor.canvas, canvasEditor.getPages()[0], [], {});
+    const dataImage=await getImageDataUrl(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
+    console.log(dataImage);
+  }
+  const exportImageBlob =async () => {
+    if (!canvasEditor) return;
+    const dataImage=await getImageBlob(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
     console.log(dataImage);
   }
 
+  const exportJsonPaths = async ()=> {
+    if (!canvasEditor) return;
+  const json = await canvasEditor.saveToJSON()
+    console.log(json);
+
+  }
 
   const addMessage = ({
     message,
@@ -76,6 +87,7 @@ const ChatArea = ({}) => {
             onClick={() => {
               console.log(chat);
               exportImage();
+              exportJsonPaths();
               addMessage({
                 user: "GPT",
                 message: "Hello",
