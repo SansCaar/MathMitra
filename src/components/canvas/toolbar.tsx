@@ -43,7 +43,7 @@ interface ToolbarProps {
 }
 
 export function Toolbar({
-  activeHandler = "Select",
+  activeHandler = "Freehand",
   onActiveHandlerChange,
 }: ToolbarProps) {
   const setActiveHandler = (handler: string) => {

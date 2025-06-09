@@ -24,13 +24,14 @@ function Canvas({
   const editor = useAtomValue(CanvasAtom);
   const setEditor = useSetAtom(CanvasAtom);
 
-  const [activeHandler, setActiveHandler] = useState<string>("Select");
+  const [activeHandler, setActiveHandler] = useState<string>("Freehand");
 
   const handleMount = async (editor: Editor) => {
     window.editor = editor;
     setEditor(editor);
     editor.newDoc();
     editor.fitToScreen();
+    editor.activateHandler("Freehand");
     window.addEventListener("resize", () => {
       editor.fit();
     });
