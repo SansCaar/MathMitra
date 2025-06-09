@@ -1,21 +1,23 @@
-
+'use client'
 
 import { TeacherHeader } from "@components/teacher/teacher-header";
+import { UserAtom } from "@src/atoms/UserAtom";
+import { useAtomValue } from "jotai";
 
 interface TeacherLayoutProps {
   children: React.ReactNode;
 }
 const layout = ({children}:TeacherLayoutProps) => {
-  const teacherData = {
-    id: "121323",
-    name: "Dr. Sarah Johnson",
-    email: "sarah.johnson@school.edu",
-  };
+
+  const user =useAtomValue(UserAtom);
+
+  if(!user) window.location.href="/auth/login";
+
   return (
     <div className="min-h-screen bg-slate-50">
       <TeacherHeader
-        teacherName={teacherData.name}
-        teacherEmail={teacherData.email}
+        teacherName={user?.name || ''}
+        teacherEmail={user?.email || ''}
       />
       {children}
         
