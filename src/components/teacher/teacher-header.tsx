@@ -11,6 +11,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
+import { useSetAtom } from "jotai";
+import { UserAtom } from "@src/atoms/UserAtom";
+import { useRouter } from "next/navigation";
 
 interface TeacherHeaderProps {
   teacherName: string;
@@ -21,6 +24,11 @@ export function TeacherHeader({
   teacherName,
   teacherEmail,
 }: TeacherHeaderProps) {
+
+  const setUser =useSetAtom(UserAtom);
+  const router = useRouter();
+
+
   const initials = teacherName
     .split(" ")
     .map((name) => name[0])
@@ -73,8 +81,16 @@ export function TeacherHeader({
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
-                <LogOut className="mr-2 h-4 w-4" />
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" 
+                  onClick={()=>{
+                  alert("Logging out...")
+                  setUser(null)
+                  router.push("/auth/login")
+                }
+                }
+              >
+                <LogOut 
+                  className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
