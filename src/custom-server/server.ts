@@ -52,16 +52,12 @@ io.of("/chat").on("connection", (socket) => {
 
 let { streamingRecognizer } = await setupSteamingRecognition();
 let isCallbackSet = false;
-
-let audioNamespace = io.of("/audio");
 let isDisabled = false;
 let timeout: NodeJS.Timeout | undefined;
 
-audioNamespace.on("connection", async (socket) => {
+io.of("/audio").on("connection", async (socket) => {
   isDisabled = false;
   const audioId = uuid();
-
-  let initTime = 1
 
   if (!isCallbackSet) {
     streamingRecognizer?.on("data", (data) => {
@@ -71,7 +67,7 @@ audioNamespace.on("connection", async (socket) => {
       }
 
       timeout = setTimeout(() => {
-        socket.emit("timeout", initTime++);
+        socket.emit("timeout", audioId);
         streamingRecognizer?.end();
         isDisabled = true;
       }, 4_000);

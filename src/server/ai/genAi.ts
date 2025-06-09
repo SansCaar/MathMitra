@@ -9,7 +9,6 @@ import {
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEN_AI_KEY,
-  vertexai: true,
 });
 
 export type tGenerateAnswerPropType = Partial<GenerateContentParameters> & {
