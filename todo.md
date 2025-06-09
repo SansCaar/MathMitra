@@ -1,7 +1,7 @@
 # TODO:
 
 # Playground
-- [ ] Making the pen tool default in the toolbar and making it's stroke light.
+- [x] Making the pen tool default in the toolbar and making it's stroke light.
 - [ ] When stopping the mike, the google speech recognition should stop.
 - [ ] Making the socket not crash.
 - [ ] Response should not override one another.

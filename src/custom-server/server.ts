@@ -1,7 +1,6 @@
 import { TMessage } from "@src/atoms/ChatAtom";
 import { setupSteamingRecognition } from "@src/server/ai/audio";
 import { generateAnswerStream } from "@src/server/ai/genAi";
-import { generateTts } from "@src/server/ai/tts";
 import http from "http";
 import { Server } from "socket.io";
 
@@ -44,10 +43,15 @@ io.of("/chat").on("connection", (socket) => {
       );
     },
   );
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
 
 let { streamingRecognizer, audioId } = await setupSteamingRecognition();
 let isCallbackSet = false;
+let timeOut: NodeJS.Timeout | null = null;
 
 io.of("/audio").on("connection", async (socket) => {
   if (!isCallbackSet) {
@@ -59,11 +63,27 @@ io.of("/audio").on("connection", async (socket) => {
   }
 
   socket.on("transcribe", async (arrayBuffer: ArrayBuffer) => {
+    if (timeOut) {
+      clearTimeout(timeOut);
+    }
+
+    timeOut = setTimeout(async () => {
+      console.log("resetting the streaming Recorgnizer");
+      streamingRecognizer?.end();
+
+      streamingRecognizer = (await setupSteamingRecognition())
+        .streamingRecognizer;
+      streamingRecognizer?.on("data", (data) => {
+        console.log("data", data);
+        socket.send(JSON.stringify({ success: true, data, audioId }));
+      });
+    }, 6 * 1000);
+
     streamingRecognizer?.write(arrayBuffer);
   });
 });
 
-const SOCKET_SERVER_PORT = process.env.port || 3001;
+const SOCKET_SERVER_PORT = process.env.SOCKET_PORT || 3001;
 
 server.listen(SOCKET_SERVER_PORT, () => {
   console.log(`express Server is running on port ${SOCKET_SERVER_PORT}`);
