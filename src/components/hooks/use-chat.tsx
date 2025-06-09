@@ -83,7 +83,7 @@ export const useChat = () => {
     chatSocket.current?.emit("chat_message", contextData);
 
     chatSocket.current?.on("message", (m) => {
-      const { data, done } = JSON.parse(m);
+      const { data, done, responseId } = JSON.parse(m);
 
       addMessage({
         user: "Test",
@@ -142,11 +142,15 @@ export const useChat = () => {
       const everyThingExceptSteaming = prev.messages.filter(
         (message) => message.id !== responseId,
       );
+
+      console.log(everyThingExceptSteaming);
       return {
         ...prev,
         messages: [
           ...everyThingExceptSteaming,
-          { id: responseId, message, userId: user, response },
+          ...(message || response
+            ? [{ id: responseId, message, userId: user, response }]
+            : []),
         ],
         states: {
           ...prev.states,

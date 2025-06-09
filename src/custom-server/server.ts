@@ -24,8 +24,7 @@ io.of("/chat").on("connection", (socket) => {
       type: "suggestion" | "nextStep";
       exportJsonPaths: Promise<string>;
     }) => {
-      const jsonPaths = await data.exportJsonPaths;
-
+      const responseId = uuid();
       const d = await generateAnswerStream({
         contents: `
           <question> 
@@ -53,6 +52,7 @@ io.of("/chat").on("connection", (socket) => {
           JSON.stringify({
             data: response,
             done: false,
+            responseId
           }),
         );
       }
@@ -61,6 +61,7 @@ io.of("/chat").on("connection", (socket) => {
         JSON.stringify({
           data: response,
           done: true,
+          responseId
         }),
       );
     },

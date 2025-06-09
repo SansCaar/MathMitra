@@ -32,7 +32,7 @@ const TitleSection = () => {
   }, [slug]);
 
   return (
-    <div className="flex gap-1 items-center mt-2.5 ml-2.5 text-gray-600">
+    <div className="flex gap-1 items-center mt-2.5 ml-2.5 text-gray-600 absolute top-2.5 left-2.5">
       <ChevronLeft onClick={() => router.back()} />
       <h1 className="text-md font-medium">
         <Latex>

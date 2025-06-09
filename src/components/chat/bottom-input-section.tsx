@@ -40,43 +40,9 @@ const BottomInputSection = () => {
         e.preventDefault();
         e.stopPropagation();
       }}
-      className="w-full"
+      className="w-full p-2.5"
     >
-      <div className="w-full flex items-end gap-2 p-2 pb-3">
-        <Button
-          variant={"outline"}
-          className={cn(
-            "h-10 w-10 p-0 flex-shrink-0",
-            !!isSpeaking && "bg-blue-500 hover:bg-blue-700",
-          )}
-          onClick={async () => {
-            await toggleMic();
-          }}
-          type="reset"
-        >
-          <Mic className="h-5 w-5" />
-        </Button>
-
-        <div className="flex-1 min-w-0">
           <MathInput />
-        </div>
-
-        <Button
-          onClick={() => handleSubmit("nextStep")}
-          variant={"outline"}
-          className="h-10 w-10 p-0 flex-shrink-0"
-        >
-          <LightbulbIcon className="h-5 w-5" />
-        </Button>
-
-        <Button
-          onClick={() => handleSubmit("suggestion")}
-          variant={"outline"}
-          className="h-10 w-10 p-0 flex-shrink-0"
-        >
-          <SendHorizontal className="h-5 w-5" />
-        </Button>
-      </div>
     </form>
   );
 };

@@ -23,7 +23,7 @@ const ChatSection = () => {
               </div>
             ) : null}
 
-            {!isTranscription && message.message ? (
+            {!isTranscription && !!message.message ? (
               <div
                 key={`message-${message.id} - ${index}`}
                 className="self-end w-fit bg-gray-300 rounded-md px-2 text-md text-gray-800"
@@ -38,38 +38,38 @@ const ChatSection = () => {
                   Took a look at the canvas and the probable questions.
                 </div>
               ) : null}
-
               {!!message ? (
                 <div
                   key={`response-${message.id}`}
                   className=" w-full  rounded-md px-2 text-md text-gray-800"
                 >
-                  {<Latex>{message?.response || ""}</Latex>}
+                  {" "}
+                  {<Latex>{message?.response || ""}</Latex>}{" "}
                 </div>
-              ) : null}
-
-              {isGenerating ? (
-                <div
-                  key={`message-${chat.messages.length}`}
-                  className="self-start h-max bg-gray-100 rounded-md p-2 text-md text-gray-800 w-3/4 flex gap-2.5 flex-col animate-pulse"
-                >
-                  Generating............
-                  <div className="message flex gap-2.5 flex-col">
-                    <div
-                      key={`message-${chat.messages.length}`}
-                      className="self-start h-2 bg-gray-300 rounded-md  text-md text-gray-800 w-2/4"
-                    ></div>
-                    <div
-                      key={`message-${chat.messages.length}`}
-                      className="self-start h-2 bg-gray-300 rounded-md  text-md text-gray-800 w-3/4"
-                    ></div>
-                  </div>
-                </div>
-              ) : null}
-            </div>
+              ) : null}{" "}
+            </div>{" "}
           </>
         );
       })}
+
+      {isGenerating ? (
+        <div
+          key={`message-${chat.messages.length}`}
+          className="self-start h-max bg-gray-100 rounded-md p-2 text-md text-gray-800 w-3/4 flex gap-2.5 flex-col animate-pulse"
+        >
+          Generating............
+          <div className="message flex gap-2.5 flex-col">
+            <div
+              key={`message-${chat.messages.length}`}
+              className="self-start h-2 bg-gray-300 rounded-md  text-md text-gray-800 w-2/4"
+            ></div>
+            <div
+              key={`message-${chat.messages.length}`}
+              className="self-start h-2 bg-gray-300 rounded-md  text-md text-gray-800 w-3/4"
+            ></div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
