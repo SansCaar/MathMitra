@@ -1,13 +1,13 @@
 "use client";
 
-import { Editor, FillStyle, Shape, Text, type ShapeProps } from "@dgmjs/core";
+import { Editor, FillStyle, Shape, Text } from "@dgmjs/core";
 import { DGMEditor, DGMEditorProps } from "@dgmjs/react";
 import { useState } from "react";
 import { Toolbar } from "./toolbar";
-import { Palette } from "./pallete";
 import { cn } from "@src/utils/cn";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 import { useAtomValue, useSetAtom } from "jotai";
+import TitleSection from "./title-section";
 
 declare global {
   interface Window {
@@ -15,9 +15,14 @@ declare global {
   }
 }
 
-function Canvas({ className, ...props }: DGMEditorProps) {
+function Canvas({
+  className,
+  ...props
+}: DGMEditorProps & {
+  playgroundId: string;
+}) {
   const editor = useAtomValue(CanvasAtom);
-  const setEditor =useSetAtom(CanvasAtom);
+  const setEditor = useSetAtom(CanvasAtom);
 
   const [activeHandler, setActiveHandler] = useState<string>("Select");
 
@@ -40,12 +45,9 @@ function Canvas({ className, ...props }: DGMEditorProps) {
     shape.roughness = 1;
   };
 
-  const handlePropsChange = (props: ShapeProps) => {
-    window.editor.actions.update(props);
-  };
-
   return (
     <div className={cn("border  relative", className)}>
+      <TitleSection />
       <DGMEditor
         className="h-full w-full rounded-md"
         onMount={handleMount}
@@ -60,7 +62,6 @@ function Canvas({ className, ...props }: DGMEditorProps) {
           window.editor.activateHandler(handler)
         }
       />
-      <Palette onPropsChange={handlePropsChange} />
     </div>
   );
 }
