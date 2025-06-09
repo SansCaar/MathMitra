@@ -1,9 +1,9 @@
-import TextToLatex from "@components/global/textToLatex";
 import { Mic, SendHorizontal } from "lucide-react";
 import { useChat } from "@components/hooks/use-chat";
 import useAudio from "@components/hooks/use-audio";
 import { cn } from "@src/lib/utils";
 import { Button } from "@components/ui/button";
+import MathInput from "@components/mathinput/MathInput";
 
 const BottomInputSection = () => {
   const { handleSubmit } = useChat();
@@ -26,10 +26,8 @@ const BottomInputSection = () => {
           type="reset"
         >
           <Mic className="h-full" />
-        </Button>
-
-        <div className="justify-end h-max flex-1">
-          <TextToLatex />
+        </Button>        <div className="justify-end h-max flex-1">
+          <MathInput />
         </div>
 
         <div className="h-full">

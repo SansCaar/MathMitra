@@ -1,0 +1,49 @@
+@import 'mathlive/dist/mathlive-fonts.css';
+
+.mathField {
+  width: 100%;
+  border-radius: 0.375rem;
+  --hue: 210;
+  --primary: hsl(var(--hue), 85%, 45%);
+  --primary-light: hsl(var(--hue), 85%, 65%);
+  --primary-dark: hsl(var(--hue), 85%, 35%);
+  
+  --ml-selection-bg-color: hsla(var(--hue), 85%, 50%, 0.3);
+  --ml-caret-color: hsla(var(--hue), 85%, 50%, 1);
+  --ml-font-size: 1.1rem;
+  --ml-math-font-size: 1.2rem;
+}
+
+:global(.ML__container) {
+  margin: 0;
+  width: 100%;
+}
+
+:global(.ML__fieldcontainer) {
+  display: block;
+  width: 100%;
+}
+
+:global(.ML__virtual-keyboard-toggle) {
+  display: none;
+}
+
+:global(.ML__mathfield) {
+  padding: 8px 10px;
+  line-height: 1.5;
+}
+
+:global(.ML__focused) {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+:global(.ML__keyboard) {
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+}
+
+:global(.ML__keyboard-key) {
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
