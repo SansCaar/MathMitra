@@ -38,21 +38,11 @@ export default function MathInput() {
           variant="outline"
           size="sm"
           onClick={() => {
-            mathFieldRef.current?.insert("\\frac{#?}{?}");
+            mathFieldRef.current?.insert("\text{#?}");
             mathFieldRef.current?.focus();
           }}
         >
-          a/b
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            mathFieldRef.current?.insert("\\sqrt{#?}");
-            mathFieldRef.current?.focus();
-          }}
-        >
-          √
+          txt
         </Button>
         <Button
           variant="outline"
@@ -62,12 +52,12 @@ export default function MathInput() {
             mathFieldRef.current?.focus();
           }}
         >
-          π
+          leTx
         </Button>
       </div>
 
       <div
-        className="math-field-container w-full min-h-[40px] p-2 border rounded-md bg-white"
+        className="math-field-container w-full h-max p-2 border rounded-md bg-white"
         ref={(ref) => {
           if (ref && !ref.hasChildNodes()) {
             const mathField = document.createElement("math-field");
