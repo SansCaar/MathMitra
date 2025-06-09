@@ -14,7 +14,7 @@ import {
   BookOpen,
   GraduationCap,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,79 +45,20 @@ interface Assignment {
   submissionsCount: number;
 }
 
-// Mock data - replace with actual API call
-const mockClassData = {
-  id: "1",
-  name: "Advanced Mathematics",
-  subject: "Mathematics",
-  section: "A",
-  description:
-    "Advanced mathematics course covering calculus and linear algebra",
-  studentCount: 28,
-  assignmentsCount: 5,
-  classCode: "MATH101",
-  createdAt: "2024-01-01",
-};
-
-const mockAssignments: Assignment[] = [
-  {
-    id: "1",
-    title: "Algebra Basics Quiz",
-    description: "Test your understanding of basic algebraic concepts",
-    dueDate: "2024-01-15",
-    createdAt: "2024-01-08",
-    submissionsCount: 25,
-    questions: [
-      {
-        id: "q1",
-        question: "Solve for x: 2x + 5 = 13",
-        answer: "x = 4",
-        submissionsCount: 25,
-      },
-      {
-        id: "q2",
-        question: "Factor the expression: x² + 5x + 6",
-        answer: "(x + 2)(x + 3)",
-        submissionsCount: 23,
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Geometry Practice",
-    description: "Practice problems on basic geometry concepts",
-    dueDate: "2024-01-20",
-    createdAt: "2024-01-10",
-    submissionsCount: 20,
-    questions: [
-      {
-        id: "q1",
-        question: "Find the area of a circle with radius 5cm",
-        answer: "78.54 cm²",
-        submissionsCount: 20,
-      },
-      {
-        id: "q2",
-        question:
-          "Calculate the perimeter of a rectangle with length 8cm and width 6cm",
-        answer: "28 cm",
-        submissionsCount: 18,
-      },
-    ],
-  },
-];
 
 export default function ClassAssignments({
   params,
 }: {
   params: { classId: string };
 }) {
+
+  const {classId} = React.use(params);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [questions, setQuestions] = useState<Record<string, Question[]>>({});
   const user = useAtomValue(UserAtom);
   const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
-  const myclassData = classes?.find((c) => c.id === params.classId);
+  const myclassData = classes?.find((c) => c.id ===classId);
 
   useEffect(() => {
     const getAssinments = async (classCode: string) => {
@@ -175,12 +116,6 @@ export default function ClassAssignments({
       year: "numeric",
     });
   };
-
-  const sortedAssignments = useMemo(() => {
-    return [...mockAssignments].sort(
-      (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-    );
-  }, []);
 
   const getSubjectColor = (subject: string) => {
     const subjectMap: Record<string, string> = {
@@ -316,20 +251,6 @@ export default function ClassAssignments({
                       {assignment.description}
                     </p>
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>View Submissions</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
