@@ -59,6 +59,24 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         body: classData,
       });
     }
+    if (groupBy === "assignmentId") {
+      const classData = await prisma.question.findMany({
+        where: {
+          assignmentId: body.assignmentId,
+        },
+      });
+      if (!classData) {
+        return NextResponse.json({
+          message: "Class not found",
+          status: "failed",
+        });
+      }
+      return NextResponse.json({
+        message: "Class found",
+        status: "success",
+        body: classData,
+      });
+    }
   } catch (err) {
     console.log(err);
     return NextResponse.json({

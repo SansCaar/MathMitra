@@ -14,6 +14,7 @@ import {
   BookOpen,
   GraduationCap,
 } from "lucide-react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +24,9 @@ import {
 import { useAtomValue } from "jotai";
 import { UserAtom } from "@src/atoms/UserAtom";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { MyClassesAtom } from "@src/atoms/UserAtom";
+import axios from "axios";
 
 interface Question {
   id: string;
@@ -109,8 +112,26 @@ export default function ClassAssignments({
 }: {
   params: { classId: string };
 }) {
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const user = useAtomValue(UserAtom);
+  const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
+  const myclassData = classes?.find((c) => c.id === params.classId);
+
+  useEffect(() => {
+    const getAssinments = async (classCode: string) => {
+      alert(classCode);
+      if (!classCode) return;
+      const response = await axios.post("/api/assignments/viewAll", {
+        classCode: classCode,
+        returnResBy: "classCode",
+      });
+      console.log(response);
+      setAssignments(response.data.body);
+    };
+
+    getAssinments(myclassData?.classCode);
+  }, [myclassData]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -143,6 +164,14 @@ export default function ClassAssignments({
     );
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleNewAssignment = () => {
+    router.push(`/teacher/assignments/create?classId=${params.classId}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
@@ -153,26 +182,22 @@ export default function ClassAssignments({
               <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                 <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
-              {mockClassData.name}
+              {myclassData?.name}
             </h1>
             <p className="text-base md:text-lg text-gray-600">
-              {mockClassData.description}
+              {myclassData?.description}
             </p>
           </div>
 
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => router.back()}
+              onClick={handleBack}
               className="group border-black bg-transparent border-2 hover:bg-black p-4 aspect-square rounded-full"
             >
               <ArrowLeft className="w-6 h-6 text-black group-hover:text-white" />
             </Button>
             <Button
-              onClick={() =>
-                router.push(
-                  `/teacher/assignments/create?classId=${params.classId}`
-                )
-              }
+              onClick={handleNewAssignment}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -192,7 +217,7 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Class Code</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {mockClassData.classCode}
+                    {myclassData?.classCode}
                   </p>
                 </div>
               </div>
@@ -203,7 +228,7 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Students</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {mockClassData.studentCount}
+                    {myclassData?.studentCount ? myclassData?.studentCount : 0}
                   </p>
                 </div>
               </div>
@@ -214,7 +239,9 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Assignments</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {mockClassData.assignmentsCount}
+                    {myclassData?.assignmentsCount
+                      ? myclassData?.assignmentsCount
+                      : 0}
                   </p>
                 </div>
               </div>
@@ -225,7 +252,7 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Created</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {formatDate(mockClassData.createdAt)}
+                    {formatDate(myclassData?.createdAt)}
                   </p>
                 </div>
               </div>

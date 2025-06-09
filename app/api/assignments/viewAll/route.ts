@@ -13,31 +13,59 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         status: "failed",
         body: "ok",
       });
-    } 
-    if (!body.teacherId) {
+    }
+    if (body.returnResBy == "teacher") {
+      if (!body.teacherId) {
+        return NextResponse.json({
+          message: "Fields are Required",
+          status: "failed",
+          body: "ok",
+        });
+      }
+      const teacherId = body.teacherId;
+      const assignmentData = await prisma.assignment.findMany({
+        where: {
+          teacherId: teacherId,
+        },
+      });
+      if (!assignmentData) {
+        return NextResponse.json({
+          message: "Assignment not found",
+          status: "failed",
+        });
+      }
       return NextResponse.json({
-        message: "Fields are Required",
-        status: "failed",
-        body: "ok",
+        message: "Assignment found",
+        status: "success",
+        body: assignmentData,
       });
     }
-    const teacherId = body.teacherId;
-    const assignmentData = await prisma.assignment.findMany({
-      where: {
-        teacherId: teacherId,
-      },
-    });
-    if (!assignmentData) {
+    if (body.returnResBy == "classCode") {
+      if (!body.classCode) {
+        return NextResponse.json({
+          message: "Fields are Required",
+          status: "failed",
+          body: "ok",
+        });
+      }
+      const classCode = body.classCode;
+      const assignmentData = await prisma.assignment.findMany({
+        where: {
+          classCode: classCode,
+        },
+      });
+      if (!assignmentData) {
+        return NextResponse.json({
+          message: "Assignment not found",
+          status: "failed",
+        });
+      }
       return NextResponse.json({
-        message: "Assignment not found",
-        status: "failed",
+        message: "Assignment found",
+        status: "success",
+        body: assignmentData,
       });
     }
-    return NextResponse.json({
-      message: "Assignment found",
-      status: "success",
-      body: assignmentData,
-    });
   } catch (err) {
     console.log(err);
     return NextResponse.json({
