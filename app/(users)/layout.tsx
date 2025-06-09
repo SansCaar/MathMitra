@@ -1,8 +1,6 @@
 'use client'
 
 import { TeacherHeader } from "@components/teacher/teacher-header";
-import { UserAtom } from "@src/atoms/UserAtom";
-import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
 interface TeacherLayoutProps {
@@ -32,7 +30,6 @@ const [user, setUser] = useState<any>(null);
         teacherEmail={user?.email || ''}
       />
       {children}
-        
     </div>
   )
 }
