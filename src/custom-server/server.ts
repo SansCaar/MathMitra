@@ -1,3 +1,5 @@
+import { TMessage } from "@src/atoms/ChatAtom";
+import { setupSteamingRecognition } from "@src/server/ai/audio";
 import { generateAnswerStream } from "@src/server/ai/genAi";
 import http from "http";
 import { Server } from "socket.io";
@@ -11,18 +13,55 @@ export let io = new Server(server, {
 });
 
 io.of("/chat").on("connection", (socket) => {
-  socket.on("chat_message", async (currentMessage: string, context: []) => {
-    const d = await generateAnswerStream({
-      contents: [""],
+  socket.on(
+    "chat_message",
+    async (currentMessage: string, previousMessages: TMessage) => {
+      const d = await generateAnswerStream({
+        /* TODO: Add correct formatting here */
+        contents: `
+            Here are the previous Messages:
+            ${JSON.stringify(previousMessages)},
+
+            Here is what is the current message:
+            ${currentMessage}`,
+        type: "suggestion",
+      });
+
+      let response: string = "";
+      for await (const chunk of d) {
+        response += chunk.text as string;
+        socket.send(
+          JSON.stringify({
+            data: response,
+            done: false,
+          }),
+        );
+      }
+
+      socket.send(
+        JSON.stringify({
+          data: response,
+          done: true,
+        }),
+      );
+    },
+  );
+});
+
+let { streamingRecognizer, audioId } = await setupSteamingRecognition();
+let isCallbackSet = false;
+
+io.of("/audio").on("connection", async (socket) => {
+  if (!isCallbackSet) {
+    streamingRecognizer?.on("data", (data) => {
+      socket.send(JSON.stringify({ success: true, data, audioId }));
     });
 
-    let response: string = "";
-    for await (const chunk of d) {
-      response += chunk.text as string;
-      socket.send(response);
-    }
+    isCallbackSet = true;
+  }
 
-    socket.send("done");
+  socket.on("transcribe", async (arrayBuffer: ArrayBuffer) => {
+    streamingRecognizer?.write(arrayBuffer);
   });
 });
 

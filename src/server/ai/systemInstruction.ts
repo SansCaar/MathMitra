@@ -17,6 +17,7 @@ export const SYSTEM_INSTRUCTIONS = {
   nextStep: ``,
   answer: ``,
   query: ``,
+  default: ``,
 };
 
 export type tSystemInstructionKey = keyof typeof SYSTEM_INSTRUCTIONS;

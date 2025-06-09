@@ -2,9 +2,12 @@
 import React, { useState } from "react";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.css";
+import { useAtomValue, useSetAtom } from "jotai";
+import TextBoxAtom from "@src/atoms/textBoxAtom";
 
 export default function TextToLatex() {
-  const [input, setInput] = useState<any>("");
+  const input = useAtomValue(TextBoxAtom);
+  const setInput = useSetAtom(TextBoxAtom);
 
   const convertToLatex = (text: string) => {
     // Split the text into parts: math expressions and regular text
@@ -72,15 +75,17 @@ export default function TextToLatex() {
 
   return (
     <div className="border-1 border-gray-400 h-10 w-full relative flex items-center">
-      <div className="area absolute inset-0 h-full w-full flex items-center"></div>
-      <div className="flex items-center px-2">{convertToLatex(input)}</div>
+      {/* <div className="area absolute inset-0 h-full w-full flex items-center"></div>
+      <div className="flex items-center px-2">{convertToLatex(input)}</div> */}
       <input
         type="text"
-        className="w-full p-2 border rounded text-transparent caret-gray-900 absolute border-none inset-0 active:border-none focus:outline-none select-none"
+        /* className="w-full p-2 border rounded text-transparent caret-gray-900 absolute border-none inset-0 active:border-none focus:outline-none select-none" */
+        className="h-full w-full border-gray-300 rounded-md"
         onChange={getInput}
-        onSelect={handleSelect}
-        onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
+        value={input}
+       /* onSelect={handleSelect}
+         onKeyDown={handleKeyDown} 
+        /* onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         value={input}
         style={{
@@ -95,7 +100,7 @@ export default function TextToLatex() {
           WebkitTouchCallout: "none",
           WebkitTapHighlightColor: "transparent",
           WebkitUserModify: "read-only",
-        }}
+        }} */
       />
     </div>
   );

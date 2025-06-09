@@ -13,7 +13,7 @@ const ai = new GoogleGenAI({
 
 export type tGenerateAnswerPropType = Partial<GenerateContentParameters> & {
   contents: GenerateContentParameters["contents"];
-  type: tSystemInstructionKey;
+  type?: tSystemInstructionKey;
 };
 
 const DEFAULT_MODAL = "gemini-2.5-flash-preview-05-20";
@@ -39,12 +39,13 @@ export const generateAnswer = async (props: tGenerateAnswerPropType) => {
  * with default modals already set.
  *
  * @deafult modal: gemini-2.5-flash-preview-05-20
+ * @default type: default
  */
 export const generateAnswerStream = async (props: tGenerateAnswerPropType) => {
   return await ai.models.generateContentStream({
     model: DEFAULT_MODAL,
     config: {
-      systemInstruction: SYSTEM_INSTRUCTIONS[props.type || "default"],
+      systemInstruction: SYSTEM_INSTRUCTIONS[props.type ?? "default"],
     },
     ...props,
   });
