@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const body = await req.json();
+    console.log("HELLOOOOOOO");
+    console.log(body);
     if (!body) {
       return NextResponse.json({
         message: "Fields are Required",

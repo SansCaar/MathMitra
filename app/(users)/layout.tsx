@@ -17,7 +17,6 @@ const [user, setUser] = useState<any>(null);
       window.location.href = "/auth/login";
       return
       }
-    console.log(user);
     setUser(JSON.parse(user));
     }
   useEffect(() => {
