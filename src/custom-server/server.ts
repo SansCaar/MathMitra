@@ -43,30 +43,30 @@ io.of("/chat").on("connection", (socket) => {
       });
 
       let response: string = "";
-      for await (const chunk of d) {
-        response += chunk.text as string;
-        socket.send(
+      /* for await (const chunk of d) {
+        response += chunk.text as string; */
+        /* socket.send(
           JSON.stringify({
             data: response,
             done: false,
-          }),
-        );
-      }
+          }), */
+        /* ); */
+      /* } */
 
-      socket.send(
+      /* socket.send(
         JSON.stringify({
           data: response,
           done: true,
-        }),
-      );
+        }), */
+      /* ); */
     },
   );
-
+/*
   socket.on("disconnect", () => {
     console.log("user disconnected");
-  });
+  }); */
 });
-
+/*
 let { streamingRecognizer } = await setupSteamingRecognition();
 let isCallbackSet = false;
 let isDisabled = false;
@@ -105,7 +105,7 @@ io.of("/audio").on("connection", async (socket) => {
     if (isDisabled) return;
     streamingRecognizer?.write(arrayBuffer);
   });
-});
+}); */
 
 const SOCKET_SERVER_PORT = process.env.SOCKET_PORT || 3001;
 

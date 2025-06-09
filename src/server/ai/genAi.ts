@@ -13,9 +13,8 @@ const ai = new GoogleGenAI({
 
 export type tGenerateAnswerPropType = Partial<GenerateContentParameters> & {
   contents: GenerateContentParameters["contents"];
-  type?: tSystemInstructionKey
-} 
-;
+  type?: tSystemInstructionKey;
+};
 
 const DEFAULT_MODAL = "gemini-2.5-flash-preview-05-20";
 
@@ -26,13 +25,13 @@ const DEFAULT_MODAL = "gemini-2.5-flash-preview-05-20";
  * @deafult modal: gemini-2.5-flash-preview-05-20
  */
 export const generateAnswer = async (props: tGenerateAnswerPropType) => {
-  return (await ai.models.generateContent({
+  return await ai.models.generateContent({
     config: {
       systemInstruction: SYSTEM_INSTRUCTIONS[props.type || "suggestion"],
     },
     model: DEFAULT_MODAL,
     ...props,
-  }));
+  });
 };
 
 /**
@@ -46,7 +45,7 @@ export const generateAnswerStream = async (props: tGenerateAnswerPropType) => {
   return await ai.models.generateContentStream({
     model: DEFAULT_MODAL,
     config: {
-      systemInstruction: SYSTEM_INSTRUCTIONS[props.type ?? "suggestion"],
+      systemInstruction: SYSTEM_INSTRUCTIONS[props.type || "suggestion"],
     },
     ...props,
   });

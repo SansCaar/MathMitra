@@ -1,4 +1,4 @@
-import { Mic, SendHorizontal } from "lucide-react";
+import { LightbulbIcon, Mic, SendHorizontal } from "lucide-react";
 import useAudio from "@components/hooks/use-audio";
 import { cn } from "@src/lib/utils";
 import { Button } from "@components/ui/button";
@@ -42,12 +42,12 @@ const BottomInputSection = () => {
       }}
       className="w-full"
     >
-      <div className="w-full flex items-start gap-2 p-2 pb-3">
+      <div className="w-full flex items-end gap-2 p-2 pb-3">
         <Button
           variant={"outline"}
           className={cn(
             "h-10 w-10 p-0 flex-shrink-0",
-            !!isSpeaking && "bg-blue-500 hover:bg-blue-700"
+            !!isSpeaking && "bg-blue-500 hover:bg-blue-700",
           )}
           onClick={async () => {
             await toggleMic();
@@ -62,15 +62,15 @@ const BottomInputSection = () => {
         </div>
 
         <Button
-          onClick={handleSubmit}
+          onClick={() => handleSubmit("nextStep")}
           variant={"outline"}
           className="h-10 w-10 p-0 flex-shrink-0"
         >
-          <SendHorizontal className="h-5 w-5" />
+          <LightbulbIcon className="h-5 w-5" />
         </Button>
 
         <Button
-          onClick={handleSubmit}
+          onClick={() => handleSubmit("suggestion")}
           variant={"outline"}
           className="h-10 w-10 p-0 flex-shrink-0"
         >

@@ -60,7 +60,7 @@ const useAudio = () => {
         }
       };
 
-      mediaRecorder.current.start(10);
+      mediaRecorder.current.start(100);
       setChatAtom((prev) => ({
         ...prev,
         speaker: "user",
@@ -92,10 +92,11 @@ const useAudio = () => {
     }
   };
 
-  audioSocket?.current?.on("timeout", (audioId) => {
+  {/* audioSocket?.current?.on("timeout", (audioId) => {
+    console.log("timeout");
     // TODO: Probably call a function to handle the timeout and send
     // response to ai.
-  });
+  }); */}
 
   function updateTranscriptionDataState() {
     let final = "";
