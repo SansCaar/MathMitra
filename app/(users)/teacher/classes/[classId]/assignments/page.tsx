@@ -331,7 +331,7 @@ export default function ClassAssignments({
                     <Button
                       onClick={() =>
                         router.push(
-                          `/teacher/assignments/${assignment.id}/report`
+                          `/teacher/classes/123/assignments/report`
                         )
                       }
                       className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
