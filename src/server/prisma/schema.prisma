@@ -7,12 +7,10 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://root:root@cluster0.miub5gw.mongodb.net/mathsmitra"
+  url      = "@env(MONGO_URL)"
 }
-
 model Student{
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
   email   String   @unique

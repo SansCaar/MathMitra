@@ -2,13 +2,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import { NEXT_DATABASE_URL } from "@src/config/mongoCongig";
-const JWT_TOKEN =
-  "cd7e8db55cc57f5b21d71eb9aaa13b642e7d466ba1f41c38543da44ed1d092a271da238102c874c4e6bf4bddfa2342be12aa255074676a2db8dd17427585e14f";
+const JWT_TOKEN = process.env.SERVER_TOKEN;
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
+  console.log(JWT_TOKEN);
   try {
     const body = await req.json();
 
