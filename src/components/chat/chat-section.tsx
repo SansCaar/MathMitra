@@ -15,39 +15,43 @@ const ChatSection = () => {
             {isTranscription ? (
               <div
                 key={`message-${message.id} - ${index}`}
-                className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
+                className="self-end w-fit bg-gray-300 rounded-md px-2 text-md text-gray-800"
               >
                 <Latex>
                   {message.finalMessage} {message.interimMessage}
                 </Latex>
               </div>
-            ) : message.message ? (
+            ) : null}
+
+            {!isTranscription && message.message ? (
               <div
                 key={`message-${message.id} - ${index}`}
-                className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
+                className="self-end w-fit bg-gray-300 rounded-md px-2 text-md text-gray-800"
               >
                 <Latex>{message.message}</Latex>
               </div>
             ) : null}
 
-            {!isTranscription && !message.message && (
-              <div className="px-2 text-sm text-gray-500">
-                Took a look at the canvas and the probable questions.
-              </div>
-            )}
+            <div>
+              {!isTranscription && !message.message ? (
+                <div className="px-2 text-sm text-gray-500">
+                  Took a look at the canvas and the probable questions.
+                </div>
+              ) : null}
 
-            {!!message ? (
-              <div
-                key={`response-${message.id}`}
-                className=" w-full  rounded-md p-2 text-md text-gray-800"
-              >
-                {<Latex>{message?.response || ""}</Latex>}
-              </div>
-            ) : null}
+              {!!message ? (
+                <div
+                  key={`response-${message.id}`}
+                  className=" w-full  rounded-md px-2 text-md text-gray-800"
+                >
+                  {<Latex>{message?.response || ""}</Latex>}
+                </div>
+              ) : null}
+            </div>
           </>
         );
       })}
-      {isGenerating && (
+      {isGenerating ? (
         <div
           key={`message-${chat.messages.length}`}
           className="self-start h-max bg-gray-100 rounded-md p-2 text-md text-gray-800 w-3/4 flex gap-2.5 flex-col animate-pulse"
@@ -64,7 +68,7 @@ const ChatSection = () => {
             ></div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
