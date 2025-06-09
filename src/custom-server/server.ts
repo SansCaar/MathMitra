@@ -22,11 +22,14 @@ io.of("/chat").on("connection", (socket) => {
       currentMsg: string;
       question?: string;
       type: "suggestion" | "nextStep";
+      exportJsonPaths: Promise<string>;
     }) => {
+      const jsonPaths = await data.exportJsonPaths;
+
       const d = await generateAnswerStream({
         contents: `
           <question> 
-          ${data.currentMsg}
+          ${data.question}
           </question>
           <context>
           <current>
@@ -37,36 +40,37 @@ io.of("/chat").on("connection", (socket) => {
           </previous>
           <canvas>
           ${data.canvasData}
+          json paths of the drawing for more information ${data.exportJsonPaths}
           </canvas>
           </context>`,
         type: data.type,
       });
 
       let response: string = "";
-      /* for await (const chunk of d) {
-        response += chunk.text as string; */
-        /* socket.send(
+      for await (const chunk of d) {
+        response += chunk.text as string;
+        socket.send(
           JSON.stringify({
             data: response,
             done: false,
-          }), */
-        /* ); */
-      /* } */
+          }),
+        );
+      }
 
-      /* socket.send(
+      socket.send(
         JSON.stringify({
           data: response,
           done: true,
-        }), */
-      /* ); */
+        }),
+      );
     },
   );
-/*
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
-  }); */
+  });
 });
-/*
+
 let { streamingRecognizer } = await setupSteamingRecognition();
 let isCallbackSet = false;
 let isDisabled = false;
@@ -105,7 +109,7 @@ io.of("/audio").on("connection", async (socket) => {
     if (isDisabled) return;
     streamingRecognizer?.write(arrayBuffer);
   });
-}); */
+});
 
 const SOCKET_SERVER_PORT = process.env.SOCKET_PORT || 3001;
 

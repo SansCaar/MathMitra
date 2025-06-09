@@ -3,15 +3,38 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { getImageDataUrl } from "@dgmjs/export";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 import { io } from "socket.io-client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CONSTANTS } from "@src/lib/constants";
 import TextBoxAtom from "@src/atoms/textBoxAtom";
 import ChatAtom from "@src/atoms/ChatAtom";
 import { DefaultEventsMap, Socket } from "socket.io";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 type tsocket = Socket<DefaultEventsMap, DefaultEventsMap>;
-
 export const useChat = () => {
+  const params = useParams();
+  const slug = params.question_id;
+  const [title, setTitle] = useState<string>("fetching playground title...");
+
+  useEffect(() => {
+    let title = "";
+    (async () => {
+      try {
+        title =
+          (
+            await axios.post(`/api/questions/viewOne`, {
+              questionId: slug,
+            })
+          )?.data.title ?? "Playground";
+        console.log(title);
+      } catch (err) {
+        title = "Playground";
+      }
+      setTitle(title);
+    })();
+  }, [slug]);
+
   const chat = useAtomValue(ChatAtom);
   const setChat = useSetAtom(ChatAtom);
   const chatSocket = useRef<tsocket | null>(null);
@@ -20,8 +43,6 @@ export const useChat = () => {
   const canvasEditor = useAtomValue(CanvasAtom);
 
   const handleSubmit = async (type: "suggestion" | "nextStep") => {
-    if (!chatSocket.current) return;
-
     const responseId = uuid();
     addMessage({
       user: "Test",
@@ -30,9 +51,22 @@ export const useChat = () => {
       isGenerating: false,
       isLoading: true,
     });
+
+    if (!chatSocket.current) return;
+
     setTextBoxValue("");
 
     const imageData = await exportImage();
+    {
+      /* const jsonPaths = await exportJsonPaths();
+    const imageBlob = await exportImageBlob(); */
+    }
+
+    const exportJsonPaths = async () => {
+      if (!canvasEditor) return;
+      const json = await canvasEditor.saveToJSON();
+      return json;
+    };
 
     chatSocket.current?.on("connect", () => {
       console.log("socket connected");
@@ -43,11 +77,11 @@ export const useChat = () => {
       canvasData: imageData,
       currentMsg: textBoxValue,
       type,
-      /* // TODO: bright question from the url param
-      question:  */
+      question: title || "",
+      exportJsonPaths,
     };
 
-    chatSocket.current?.emit("chat_message", textBoxValue, contextData);
+    chatSocket.current?.emit("chat_message", contextData);
 
     chatSocket.current?.on("message", (m) => {
       const { data, done } = JSON.parse(m);
@@ -74,6 +108,21 @@ export const useChat = () => {
 
     return dataImage;
   };
+
+  {
+    /* const exportImageBlob = async () => {
+    if (!canvasEditor) return;
+    const dataImage = await getImageBlob(
+      canvasEditor.canvas,
+      canvasEditor.getPages()[0],
+      [],
+      { scale: 0.5 },
+    );
+
+    return dataImage;
+  };
+*/
+  }
 
   const addMessage = ({
     message,
