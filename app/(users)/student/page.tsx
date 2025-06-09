@@ -1,7 +1,7 @@
-import { Suspense } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
-import { Badge } from "@\components/ui/badge"
-import { Button } from "@components/ui/button"
+import { Suspense } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { Badge } from "@components/ui/badge";
+import { Button } from "@components/ui/button";
 import {
   Play,
   Users,
@@ -16,62 +16,66 @@ import {
   TrendingUp,
   User,
   Filter,
-} from "lucide-react"
-import { JoinClassDialog } from "@components/student/join-class-dialog"
-import { DashboardSkeleton } from "@components/student/dashboard-skeleton"
+} from "lucide-react";
+import axios from "axios";
+import { UserAtom } from "@src/atoms/UserAtom";
+
+import { JoinClassDialog } from "@components/student/join-class-dialog";
+import { DashboardSkeleton } from "@components/student/dashboard-skeleton";
+import { useAtomValue } from "jotai";
 
 // Types
 interface StudentProfile {
-  id: string
-  name: string
-  email: string
+  id: string;
+  name: string;
+  email: string;
 }
 
 interface ClassData {
-  id: string
-  name: string
-  code: string
-  subject: string
-  teacher: string
-  studentCount: number
-  assignmentCount: number
+  id: string;
+  name: string;
+  code: string;
+  subject: string;
+  teacher: string;
+  studentCount: number;
+  assignmentCount: number;
 }
 
 interface Assignment {
-  id: string
-  title: string
-  subject: string
-  className: string
-  classCode: string
-  dueDate: string
-  createdDate: string
-  status: "active" | "completed" | "overdue"
-  questionCount: number
-  completedQuestions: number
+  id: string;
+  title: string;
+  subject: string;
+  className: string;
+  classCode: string;
+  dueDate: string;
+  createdDate: string;
+  status: "active" | "completed" | "overdue";
+  questionCount: number;
+  completedQuestions: number;
 }
 
 interface PracticeSession {
-  id: string
-  title: string
-  questionCount: number
-  lastAccessed: string
-  progress: number
+  id: string;
+  title: string;
+  questionCount: number;
+  lastAccessed: string;
+  progress: number;
 }
 
 // Server-side data fetching functions
 async function getStudentProfile(): Promise<StudentProfile> {
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 100))
+  await new Promise((resolve) => setTimeout(resolve, 100));
   return {
     id: "1",
     name: "Alex",
     email: "alex@example.com",
-  }
+  };
 }
 
 async function getClasses(): Promise<ClassData[]> {
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 150))
+  await new Promise((resolve) => setTimeout(resolve, 150));
   return [
     {
       id: "1",
@@ -91,12 +95,12 @@ async function getClasses(): Promise<ClassData[]> {
       studentCount: 19,
       assignmentCount: 3,
     },
-  ]
+  ];
 }
 
 async function getAssignments(): Promise<Assignment[]> {
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  await new Promise((resolve) => setTimeout(resolve, 200));
   return [
     {
       id: "1",
@@ -134,12 +138,12 @@ async function getAssignments(): Promise<Assignment[]> {
       questionCount: 12,
       completedQuestions: 12,
     },
-  ]
+  ];
 }
 
 async function getPracticeSessions(): Promise<PracticeSession[]> {
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 120))
+  await new Promise((resolve) => setTimeout(resolve, 120));
   return [
     {
       id: "1",
@@ -155,36 +159,37 @@ async function getPracticeSessions(): Promise<PracticeSession[]> {
       lastAccessed: "1 day ago",
       progress: 45,
     },
-  ]
+  ];
 }
 
 // Helper functions
 function getStatusColor(status: string) {
   switch (status) {
     case "active":
-      return "bg-blue-100 text-blue-800"
+      return "bg-blue-100 text-blue-800";
     case "completed":
-      return "bg-green-100 text-green-800"
+      return "bg-green-100 text-green-800";
     case "overdue":
-      return "bg-red-100 text-red-800"
+      return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-100 text-gray-800"
+      return "bg-gray-100 text-gray-800";
   }
 }
 
 function getProgressPercentage(completed: number, total: number) {
-  return Math.round((completed / total) * 100)
+  return Math.round((completed / total) * 100);
 }
 
 // Main Dashboard Component
 async function StudentDashboard() {
   // Fetch all data in parallel
-  const [studentProfile, classes, assignments, practiceSessions] = await Promise.all([
-    getStudentProfile(),
-    getClasses(),
-    getAssignments(),
-    getPracticeSessions(),
-  ])
+  const [studentProfile, classes, assignments, practiceSessions] =
+    await Promise.all([
+      getStudentProfile(),
+      getClasses(),
+      getAssignments(),
+      getPracticeSessions(),
+    ]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -197,7 +202,9 @@ async function StudentDashboard() {
             </div>
             Welcome back, {studentProfile.name}! 👋
           </h1>
-          <p className="text-base md:text-lg text-gray-600">Here's what's happening with your studies today.</p>
+          <p className="text-base md:text-lg text-gray-600">
+            Here's what's happening with your studies today.
+          </p>
         </div>
 
         {/* Quick Actions */}
@@ -210,8 +217,12 @@ async function StudentDashboard() {
                   <Play className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Practice Playground</h3>
-                  <p className="text-gray-600">Create and practice with your own questions</p>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Practice Playground
+                  </h3>
+                  <p className="text-gray-600">
+                    Create and practice with your own questions
+                  </p>
                 </div>
               </div>
               <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 self-end">
@@ -229,15 +240,17 @@ async function StudentDashboard() {
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Join Class</h3>
-                  <p className="text-gray-600">Enter a class code to join a new class</p>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Join Class
+                  </h3>
+                  <p className="text-gray-600">
+                    Enter a class code to join a new class
+                  </p>
                 </div>
               </div>
               <JoinClassDialog />
             </CardContent>
           </Card>
-
-         
         </div>
 
         {/* My Classes Section */}
@@ -252,15 +265,26 @@ async function StudentDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {classes.map((classItem) => (
-              <Card key={classItem.id} className="border-0 shadow-lg rounded-2xl overflow-hidden">
+              <Card
+                key={classItem.id}
+                className="border-0 shadow-lg rounded-2xl overflow-hidden"
+              >
                 <CardHeader className="bg-white border-b border-gray-100 pb-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Badge className="bg-blue-100 text-blue-800 mb-2">{classItem.subject}</Badge>
-                      <CardTitle className="text-lg font-bold text-gray-900">{classItem.name}</CardTitle>
-                      <p className="text-gray-600 text-sm">Teacher: {classItem.teacher}</p>
+                      <Badge className="bg-blue-100 text-blue-800 mb-2">
+                        {classItem.subject}
+                      </Badge>
+                      <CardTitle className="text-lg font-bold text-gray-900">
+                        {classItem.name}
+                      </CardTitle>
+                      <p className="text-gray-600 text-sm">
+                        Teacher: {classItem.teacher}
+                      </p>
                     </div>
-                    <Badge className="bg-primary text-white">Code: {classItem.code}</Badge>
+                    <Badge className="bg-primary text-white">
+                      Code: {classItem.code}
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 bg-white">
@@ -289,7 +313,9 @@ async function StudentDashboard() {
         {/* Recent Assignments Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Recent Assignments</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Recent Assignments
+            </h2>
             <Button variant="outline" size="sm" className="rounded-xl">
               View All
             </Button>
@@ -297,17 +323,25 @@ async function StudentDashboard() {
 
           <div className="space-y-4">
             {assignments.map((assignment) => (
-              <Card key={assignment.id} className="border-0 shadow-lg rounded-2xl overflow-hidden">
+              <Card
+                key={assignment.id}
+                className="border-0 shadow-lg rounded-2xl overflow-hidden"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">{assignment.title}</h3>
+                        <h3 className="text-lg font-bold text-gray-900">
+                          {assignment.title}
+                        </h3>
                         <Badge className={getStatusColor(assignment.status)}>
-                          {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                          {assignment.status.charAt(0).toUpperCase() +
+                            assignment.status.slice(1)}
                         </Badge>
                       </div>
-                      <p className="text-gray-600 mb-3">{assignment.className}</p>
+                      <p className="text-gray-600 mb-3">
+                        {assignment.className}
+                      </p>
                       <div className="flex items-center gap-6 text-sm text-gray-500">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
@@ -316,7 +350,8 @@ async function StudentDashboard() {
                         <div className="flex items-center gap-1">
                           <Target className="w-4 h-4" />
                           <span>
-                            {assignment.completedQuestions}/{assignment.questionCount} questions
+                            {assignment.completedQuestions}/
+                            {assignment.questionCount} questions
                           </span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -328,13 +363,20 @@ async function StudentDashboard() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <div className="text-sm font-medium text-gray-900">
-                          {getProgressPercentage(assignment.completedQuestions, assignment.questionCount)}% Complete
+                          {getProgressPercentage(
+                            assignment.completedQuestions,
+                            assignment.questionCount
+                          )}
+                          % Complete
                         </div>
                         <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
                           <div
                             className="bg-primary h-2 rounded-full"
                             style={{
-                              width: `${getProgressPercentage(assignment.completedQuestions, assignment.questionCount)}%`,
+                              width: `${getProgressPercentage(
+                                assignment.completedQuestions,
+                                assignment.questionCount
+                              )}%`,
                             }}
                           ></div>
                         </div>
@@ -369,7 +411,9 @@ async function StudentDashboard() {
         {/* Practice Sessions Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">My Practice Sessions</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              My Practice Sessions
+            </h2>
             <Button className="bg-primary hover:bg-blue-600 text-white rounded-xl">
               <Plus className="w-4 h-4 mr-2" />
               New Session
@@ -378,20 +422,34 @@ async function StudentDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {practiceSessions.map((session) => (
-              <Card key={session.id} className="border-0 shadow-lg rounded-2xl overflow-hidden">
+              <Card
+                key={session.id}
+                className="border-0 shadow-lg rounded-2xl overflow-hidden"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900">{session.title}</h3>
-                      <p className="text-gray-600 text-sm">{session.questionCount} questions</p>
+                      <h3 className="text-lg font-bold text-gray-900">
+                        {session.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        {session.questionCount} questions
+                      </p>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-medium text-gray-900">{session.progress}% Complete</div>
-                      <div className="text-xs text-gray-500">Last: {session.lastAccessed}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {session.progress}% Complete
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Last: {session.lastAccessed}
+                      </div>
                     </div>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div className="bg-primary h-2 rounded-full" style={{ width: `${session.progress}%` }}></div>
+                    <div
+                      className="bg-primary h-2 rounded-full"
+                      style={{ width: `${session.progress}%` }}
+                    ></div>
                   </div>
                   <Button className="w-full bg-primary hover:bg-blue-600 text-white font-semibold rounded-xl">
                     <Play className="w-4 h-4 mr-2" />
@@ -404,7 +462,7 @@ async function StudentDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Main Page Component with Suspense
@@ -413,10 +471,10 @@ export default function DashboardPage() {
     <Suspense fallback={<DashboardSkeleton />}>
       <StudentDashboard />
     </Suspense>
-  )
+  );
 }
 
 export const metadata = {
   title: "Student Dashboard | Learning Platform",
   description: "View your classes, assignments, and practice sessions",
-}
+};

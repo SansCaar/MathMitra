@@ -1,56 +1,79 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@components/ui/button"
-import { Input } from "@components/ui/input"
-import { Label } from "@components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@components/ui/dialog"
-import { Alert, AlertDescription } from "@components/ui/alert"
-import { Plus, CheckCircle, AlertCircle } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@components/ui/dialog";
+import axios from "axios";
+import { Alert, AlertDescription } from "@components/ui/alert";
+import { Plus, CheckCircle, AlertCircle } from "lucide-react";
+import { UserAtom } from "@src/atoms/UserAtom";
+import { useAtomValue } from "jotai";
 
 export function JoinClassDialog() {
-  const [joinClassCode, setJoinClassCode] = useState("")
-  const [isJoining, setIsJoining] = useState(false)
+  const user = useAtomValue(UserAtom);
+  const [joinClassCode, setJoinClassCode] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
   const [status, setStatus] = useState<{
-    type: "success" | "error" | null
-    message: string
-  }>({ type: null, message: "" })
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
 
   const handleJoinClass = async () => {
-    if (!joinClassCode.trim()) return
+    if (!joinClassCode.trim()) return;
 
-    setIsJoining(true)
-    setStatus({ type: null, message: "" })
+    setIsJoining(true);
+    setStatus({ type: null, message: "" });
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      // Mock validation - check if class code exists
-      const validCodes = ["24640", "35821", "41796", "52947", "68394"]
-      const isValid = validCodes.includes(joinClassCode.trim())
-
-      if (isValid) {
+      const res = await fetch("/api/classes/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          classCode: Number(joinClassCode),
+          userId: user?.id,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.data) {
         setStatus({
           type: "success",
           message: `Successfully joined class with code ${joinClassCode}!`,
-        })
-        setJoinClassCode("")
+        });
+        setJoinClassCode("");
       } else {
         setStatus({
           type: "error",
           message: "Class code not found. Please check and try again.",
-        })
+        });
       }
+
+      // // Simulate API call
+
+      // await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // // Mock validation - check if class code exists
+      // const validCodes = ["24640", "35821", "41796", "52947", "68394"]
+      // const isValid = validCodes.includes(joinClassCode.trim())
     } catch (error) {
       setStatus({
         type: "error",
         message: "Failed to join class. Please try again.",
-      })
+      });
     } finally {
-      setIsJoining(false)
+      setIsJoining(false);
     }
-  }
+  };
 
   return (
     <Dialog>
@@ -67,7 +90,11 @@ export function JoinClassDialog() {
         <div className="space-y-4">
           {status.type && (
             <Alert
-              className={`border-2 ${status.type === "success" ? "border-success bg-green-50" : "border-red-400 bg-red-50"}`}
+              className={`border-2 ${
+                status.type === "success"
+                  ? "border-success bg-green-50"
+                  : "border-red-400 bg-red-50"
+              }`}
             >
               {status.type === "success" ? (
                 <CheckCircle className="h-5 w-5 text-success" />
@@ -75,7 +102,9 @@ export function JoinClassDialog() {
                 <AlertCircle className="h-5 w-5 text-red-500" />
               )}
               <AlertDescription
-                className={`text-base font-medium ${status.type === "success" ? "text-green-800" : "text-red-800"}`}
+                className={`text-base font-medium ${
+                  status.type === "success" ? "text-green-800" : "text-red-800"
+                }`}
               >
                 {status.message}
               </AlertDescription>
@@ -93,7 +122,9 @@ export function JoinClassDialog() {
               className="h-12 text-base border-2 rounded-xl"
               maxLength={5}
             />
-            <p className="text-sm text-gray-500">Try: 24640, 35821, 41796, 52947, or 68394</p>
+            <p className="text-sm text-gray-500">
+              Try: 24640, 35821, 41796, 52947, or 68394
+            </p>
           </div>
           <Button
             onClick={handleJoinClass}
@@ -112,5 +143,5 @@ export function JoinClassDialog() {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
