@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { TMyClassesAtom } from "@src/atoms/UserAtom";
 
 export interface Class {
   id: string;
@@ -29,7 +30,7 @@ export interface Class {
 }
 
 interface MyClassesProps {
-  classes: Class[];
+  classes: TMyClassesAtom;
   onCreateClass: () => void;
 }
 

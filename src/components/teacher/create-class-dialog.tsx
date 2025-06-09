@@ -14,6 +14,9 @@ import {
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
 import { Textarea } from "@components/ui/textarea";
+import { useAtomValue } from "jotai";
+import { User } from "lucide-react";
+import { UserAtom } from "@src/atoms/UserAtom";
 
 interface CreateClassDialogProps {
   open: boolean;
@@ -37,12 +40,14 @@ export function CreateClassDialog({
   onOpenChange,
   onCreateClass,
 }: CreateClassDialogProps) {
+
+  const user = useAtomValue(UserAtom);
   const [formData, setFormData] = useState<ClassFormData>({
     name: "",
     subject: "",
     description: "",
     section: "",
-    teacherId: "121323",
+    teacherId: user?.id,
     classCode: 0,
     studentsCount: 0,
     assignmentsCount: 0,
@@ -59,7 +64,6 @@ export function CreateClassDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
       const response = await fetch("/api/classes/createClass", {
         method: "POST",

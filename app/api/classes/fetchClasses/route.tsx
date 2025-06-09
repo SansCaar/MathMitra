@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const body = await req.json();
+    console.log(body);
     if (!body.userId) {
       return NextResponse.json({
         message: "teacherId is required",
@@ -29,6 +30,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           status: "failed",
         });
       }
+      console.log(classData);
       return NextResponse.json({
         message: "Class found",
         status: "success",

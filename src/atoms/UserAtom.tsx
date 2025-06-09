@@ -1,6 +1,7 @@
 import { atom, useSetAtom } from "jotai";
+import { atomWithStorage} from "jotai/utils";
 
-type TUser = {
+export type TUser = {
   id: string;
   name: string;
   email: string;
@@ -8,7 +9,7 @@ type TUser = {
   classes: string[];
 };
 
-type TMyClassesAtom = {
+export type TMyClassesAtom = {
   id: string;
   name: string;
   subject: string;
@@ -43,19 +44,20 @@ export const fetchUser = async ({userId,role, setUser}: {userId:string, setUser:
 };
 
 
-const fetchClasses = async ({userId, setMyClasses}:{userId:string, setMyClasses: any}) => {
+export const fetchClasses = async ({userId, role="teacher", setMyClasses}:{userId:string,role?:string, setMyClasses: any}) => {
   try {
     const response = await fetch("/api/classes/fetchClasses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId}),
+      body: JSON.stringify({  userId, role}),
     });
     if (!response.ok) {
       throw new Error("Failed to fetch classes");
     }
     const data = await response.json();
+    console.log(data);
     setMyClasses(data.data);
   } catch (error) {
     console.error("Error fetching classes:", error);
@@ -64,8 +66,8 @@ const fetchClasses = async ({userId, setMyClasses}:{userId:string, setMyClasses:
 };
 
 
-export const MyClassesAtom = atom<TMyClassesAtom| null>(null);
+export const MyClassesAtom =atomWithStorage<TMyClassesAtom| null>("myClasses", null);
 
-export const UserAtom = atom<TUser | null>(null);
+export const UserAtom = atomWithStorage<TUser | null>("user", null);
 
 
