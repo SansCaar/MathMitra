@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TeacherHeader } from "@components/teacher/teacher-header";
 import { MyClasses } from "@components/teacher/my-classes";
 import { RecentAssignments } from "@components/teacher/recent-assignments";
 import type { Class } from "@components/teacher/my-classes";
 import { ActionCards } from "@components/teacher/action-cards";
+import { MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 
 export default function TeacherDashboard() {
   const teacherData = {
@@ -14,11 +15,14 @@ export default function TeacherDashboard() {
     email: "sarah.johnson@school.edu",
   };
 
-  const [classes, setClasses] = useState<Class[]>([]);
+  const user = useAtomValue(UserAtom);
+  const setUser = useSetAtom(UserAtom);
+
+  const classes = useAtomValue(MyClassesAtom);
+  const setClasses = useSetAtom(MyClassesAtom);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    alert(process.env.NEXT_PUBLIC_HEY);
     const fetchClasses = async () => {
       try {
         const response = await fetch("/api/classes/fetchClasses", {
@@ -26,7 +30,7 @@ export default function TeacherDashboard() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ teacherId: "12345" }),
+          body: JSON.stringify({ teacherId: teacherData.id }),
         });
 
         if (!response.ok) {
@@ -34,7 +38,6 @@ export default function TeacherDashboard() {
         }
 
         const data = await response.json();
-        console.log("Fetched classes:", data.data);
         setClasses(data.data);
       } catch (error) {
         console.error("Error fetching classes:", error);

@@ -15,6 +15,8 @@ import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { UserAtom } from "@src/atoms/UserAtom";
+import { useSetAtom } from "jotai";
 
 interface LoginResponse {
   message: string;
@@ -24,12 +26,16 @@ interface LoginResponse {
 
 export default function LoginForm() {
   const router = useRouter();
+
+  const setUser = useSetAtom(UserAtom);
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role: "student",
   });
 
   const togglePasswordVisibility = () => {
@@ -50,19 +56,22 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      const response = await axios.post("/api/users/studentLogin", {
+      const response = await axios.post("/api/users/login", {
         email: formData.email,
         password: formData.password,
+        role: formData.role,
       });
       const data = response.data;
-      console.log("Login response:", data);
 
       if (data.status === "success" && data.token) {
         // Store the token
         localStorage.setItem("token", data.token);
-        router.push("/1/playground");
-        // Redirect to dashboard or home page
-        // router.push("/dashboard");
+        setUser(data.user);
+        if(data.user.role === "teacher"){
+          router.push("/teacher");
+        }else{
+          router.push("/1/playground");
+        }
       } else {
         setError(data.message || "Login failed");
       }
@@ -139,6 +148,9 @@ export default function LoginForm() {
                     paddingLeft: 16,
                   }}
                 />
+
+                {/* BUTTON TO TOGGLE ROLE */}
+
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
@@ -152,6 +164,7 @@ export default function LoginForm() {
                 </button>
               </div>
             </div>
+
             <div
               className="flex items-center justify-between text-sm pt-2"
               style={{
@@ -172,6 +185,58 @@ export default function LoginForm() {
                 Forgot password?
               </a>
             </div>
+            <div>
+              <span className="text-slate-600 text-center w-full">
+                Who are you?
+              </span>
+
+              <div className="flex w-full items-center justify-between text-sm pt-2 gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className={` flex-1 h-12   font-bold text-slate-800
+${
+  formData.role === "student"
+    ? "bg-slate-800 hover:bg-slate-800  text-white hover:text-white"
+    : "bg-transparent hover:bg-transparent border-2 border-slate-800  "
+}
+`}
+                  disabled={isLoading}
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      role: "teacher",
+                    });
+                  }}
+                >
+                  Student
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className={` flex-1 h-12   font-bold text-slate-800
+${
+  formData.role === "teacher"
+    ? "bg-slate-800 hover:bg-slate-800  text-white hover:text-white"
+    : "bg-transparent hover:bg-transparent border-2 border-slate-800  "
+}
+`}
+                  disabled={isLoading}
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      role: "teacher",
+                    });
+                  }}
+                >
+                  {" "}
+                  Teacher
+                </Button>
+              </div>
+            </div>
+            {/* END OF BUTTON TO TOGGLE ROLE */}
           </CardContent>
           <CardFooter
             className="flex flex-col space-y-4 pt-4 px-8 pb-8"
