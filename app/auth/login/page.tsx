@@ -71,7 +71,7 @@ export default function LoginForm() {
         if (data.user.role === "teacher") {
           router.push("/teacher");
         } else {
-          router.push("/1/playground");
+          router.push("/student");
         }
       } else {
         setError(data.message || "Login failed");
