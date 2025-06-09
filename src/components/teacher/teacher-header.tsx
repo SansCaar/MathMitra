@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { UserAtom } from "@src/atoms/UserAtom";
 import { useRouter } from "next/navigation";
 
@@ -25,6 +25,7 @@ export function TeacherHeader({
   teacherEmail,
 }: TeacherHeaderProps) {
 
+  const user = useAtomValue(UserAtom);
   const setUser =useSetAtom(UserAtom);
   const router = useRouter();
 
@@ -40,7 +41,7 @@ export function TeacherHeader({
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link href="/teacher">
+            <Link href={ `/${user?.role}` }>
             <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
             </Link>
           </div>

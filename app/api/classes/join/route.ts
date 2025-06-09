@@ -41,19 +41,22 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     const existingStudents = Array.isArray(classData.studentId)
       ? (classData.studentId as unknown as StudentData[])
       : [];
+    console.log("EXISTING STUDENTS");
+    console.log(existingStudents);
 
-    // if (classData?.studentId !== null) {
-    //   console.log("Ok");
-    //   classData?.studentId.forEach(async (student) => {
-    //     if (student.id === body.userId) {
-    //       return NextResponse.json({
-    //         status: "failed",
-    //         message: "User already joined class",
-    //       });
-    //     }
-    //   });
-    // }
 
+    // Check if the user is already a student
+    const existingStudent = existingStudents.find(
+      (student) => student.id === body.userId
+        );
+
+    if (existingStudent?.id) {
+      return NextResponse.json({
+        message: "User is already a student",
+        status: "failed",
+        data: existingStudent,
+      });
+    }
     // Create new student object
     const newStudent = {
       id: body.userId,

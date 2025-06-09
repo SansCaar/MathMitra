@@ -89,7 +89,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
+      <div className="container mx-auto px-4 py-4 pt-8 space-y-8">
         {/* Header Section */}
         <div className="space-y-2">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
@@ -157,11 +157,12 @@ export default function StudentDashboard() {
         {/* My Classes Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">My Classes</h2>
-            <Button variant="outline" size="sm" className="rounded-xl">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">My Classes</h2>
+              <p className="text-gray-600 mt-1">
+                Manage and access your enrolled classes
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -170,7 +171,7 @@ export default function StudentDashboard() {
                 key={classItem.id}
                 className="border-0 shadow-lg rounded-2xl overflow-hidden"
               >
-                <CardHeader className="bg-white border-b border-gray-100">
+                <CardHeader className="bg-white border-b border-gray-100 px-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <Badge className="bg-blue-100 text-blue-800 mb-2">
@@ -188,8 +189,8 @@ export default function StudentDashboard() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="px-6 bg-white">
-                  <div className="flex items-center justify-between mb-4">
+                <CardContent className="px-6">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Users className="w-4 h-4" />
@@ -206,116 +207,24 @@ export default function StudentDashboard() {
                       </div>
                     </div>
                   </div>
-                  <Button
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
-                    onClick={() =>
-                      router.push(
-                        `/student/classes/${classItem?.id}/assignments`
-                      )
-                    }
-                  >
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    View Assignments
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Assignments Section */}
-        {/* <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Recent Assignments
-            </h2>
-            <Button variant="outline" size="sm" className="rounded-xl">
-              View All
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {assignments.map((assignment) => (
-              <Card
-                key={assignment.id}
-                className="border-0 shadow-lg rounded-2xl overflow-hidden"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">
-                          {assignment.title}
-                        </h3>
-                      </div>
-                      <p className="text-gray-600 mb-3">
-                        {assignment.className}
-                      </p>
-                      <div className="flex items-center gap-6 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>Due {assignment.dueDate}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Target className="w-4 h-4" />
-                          <span>
-                            {assignment.completedQuestions}/
-                            {assignment.questionCount} questions
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>Created {assignment.createdDate}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-gray-900">
-                          {getProgressPercentage(
-                            assignment.completedQuestions,
-                            assignment.questionCount
-                          )}
-                          % Complete
-                        </div>
-                        <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
-                          <div
-                            className="bg-primary h-2 rounded-full"
-                            style={{
-                              width: `${getProgressPercentage(
-                                assignment.completedQuestions,
-                                assignment.questionCount
-                              )}%`,
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                      <Button
-                        className={`rounded-xl font-semibold ${
-                          assignment.status === "completed"
-                            ? "bg-green-100 hover:bg-green-200 text-green-800"
-                            : "bg-primary hover:bg-blue-600 text-white"
-                        }`}
-                      >
-                        {assignment.status === "completed" ? (
-                          <>
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            Review
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-4 h-4 mr-2" />
-                            Continue
-                          </>
-                        )}
-                      </Button>
-                    </div>
+                  <div className="flex ">
+                    <Button
+                      className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
+                      onClick={() =>
+                        router.push(
+                          `/student/classes/${classItem?.id}/assignments`
+                        )
+                      }
+                    >
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      View Assignments
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
