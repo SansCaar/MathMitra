@@ -208,7 +208,7 @@ ${
                   onClick={() => {
                     setFormData({
                       ...formData,
-                      role: "teacher",
+                      role: "student",
                     });
                   }}
                 >
