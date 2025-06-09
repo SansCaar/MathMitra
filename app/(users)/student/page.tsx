@@ -203,8 +203,8 @@ async function StudentDashboard() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Playground */}
-          <Card className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-            <CardContent className="p-6 md:p-8">
+          <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2 ">
+            <CardContent className="px-4 md:px-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <Play className="w-6 h-6 text-white" />
@@ -214,7 +214,7 @@ async function StudentDashboard() {
                   <p className="text-gray-600">Create and practice with your own questions</p>
                 </div>
               </div>
-              <Button className="w-full bg-primary hover:bg-blue-600 text-white font-semibold rounded-xl h-12">
+              <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 self-end">
                 <Code className="w-5 h-5 mr-2" />
                 Start Practicing
               </Button>
@@ -223,9 +223,9 @@ async function StudentDashboard() {
 
           {/* Join Class */}
           <Card className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-            <CardContent className="p-6 md:p-8">
+            <CardContent className="px-4 md:px-6">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -237,29 +237,7 @@ async function StudentDashboard() {
             </CardContent>
           </Card>
 
-          {/* Study Stats */}
-          <Card className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-            <CardContent className="p-6 md:p-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">Study Progress</h3>
-                  <p className="text-gray-600">Track your learning journey</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">This Week</span>
-                  <span className="font-semibold">12 questions solved</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-purple-500 h-2 rounded-full" style={{ width: "75%" }}></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+         
         </div>
 
         {/* My Classes Section */}
