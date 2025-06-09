@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { TMyClassesAtom } from "@src/atoms/UserAtom";
+import { useRouter } from "next/navigation";
 
 export interface Class {
   id: string;
@@ -24,7 +25,7 @@ export interface Class {
   subject: string;
   section: string;
   description: string;
-  studentsCount?: number;
+  studentCount?: number;
   assignmentsCount?: number;
   classCode?: string;
 }
@@ -35,10 +36,12 @@ interface MyClassesProps {
 }
 
 export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
+  const router = useRouter();
+
   // Add mock data for student and assignment counts if not provided
   const classesWithCounts = classes.map((cls) => ({
     ...cls,
-    studentsCount: cls.studentsCount || Math.floor(Math.random() * 30) + 10,
+    studentCount: cls.studentCount || Math.floor(Math.random() * 30) + 10,
     assignmentsCount: cls.assignmentsCount || Math.floor(Math.random() * 5),
   }));
 
@@ -97,7 +100,10 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {classesWithCounts.map((cls) => (
-              <Card key={cls.id} className="hover:shadow-md transition-shadow gap-2">
+            <Card
+              key={cls.id}
+              className="hover:shadow-md transition-shadow gap-2"
+            >
               <CardHeader className=" pt-4 px-4">
                 <div className="flex items-start justify-between">
                   <div className="w-full">
@@ -133,7 +139,7 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
                 <div className="flex items-center justify-between w-full text-sm">
                   <div className="flex items-center space-x-1 text-slate-600">
                     <Users className="h-4 w-4" />
-                    <span>{cls.studentsCount} students</span>
+                    <span>{cls.studentCount} students</span>
                   </div>
                   <div className="flex items-center space-x-1 text-slate-600">
                     <FileText className="h-4 w-4" />
@@ -142,7 +148,14 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
                 </div>
               </CardFooter>
               <div className="px-4 pb-3">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() =>
+                    router.push(`/teacher/classes/${cls.id}/assignments`)
+                  }
+                >
                   <FileText className="mr-2 h-3 w-3" />
                   Assignments
                 </Button>

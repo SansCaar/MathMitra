@@ -15,26 +15,34 @@ const BottomInputSection = () => {
         e.preventDefault();
         e.stopPropagation();
       }}
+      className="w-full"
     >
-      <div className="w-full flex py-1 px-2 gap-2 pb-2.5">
+      <div className="w-full flex items-start gap-2 p-2 pb-3">
         <Button
           variant={"outline"}
-          className={cn(!!isSpeaking && "bg-blue-500 hover:bg-blue-700")}
+          className={cn(
+            "h-10 w-10 p-0 flex-shrink-0",
+            !!isSpeaking && "bg-blue-500 hover:bg-blue-700"
+          )}
           onClick={async () => {
             await toggleMic();
           }}
           type="reset"
         >
-          <Mic className="h-full" />
-        </Button>        <div className="justify-end h-max flex-1">
+          <Mic className="h-5 w-5" />
+        </Button>
+
+        <div className="flex-1 min-w-0">
           <MathInput />
         </div>
 
-        <div className="h-full">
-          <Button onClick={handleSubmit} variant={"outline"}>
-            <SendHorizontal className=" h-full " />
-          </Button>
-        </div>
+        <Button
+          onClick={handleSubmit}
+          variant={"outline"}
+          className="h-10 w-10 p-0 flex-shrink-0"
+        >
+          <SendHorizontal className="h-5 w-5" />
+        </Button>
       </div>
     </form>
   );

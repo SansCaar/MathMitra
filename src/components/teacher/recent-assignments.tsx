@@ -10,8 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { UserAtom } from "@src/atoms/UserAtom";
+import { useRouter } from "next/navigation";
+
 interface Assignment {
   id: string;
   title: string;
@@ -63,6 +65,7 @@ const mockAssignments: Assignment[] = [
 
 export function RecentAssignments() {
   const user = useAtomValue(UserAtom);
+  const router = useRouter();
 
   const getStatusColor = (status: Assignment["status"]) => {
     switch (status) {
@@ -85,19 +88,26 @@ export function RecentAssignments() {
     });
   };
 
+  // Only show the first 3 assignments
+  const recentAssignments = mockAssignments.slice(0, 3);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-slate-900">
           Recent Assignments
         </h2>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.push("/teacher/assignments")}
+        >
           View All
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {mockAssignments.map((assignment) => (
+        {recentAssignments.map((assignment) => (
           <Card
             key={assignment.id}
             className="hover:shadow-md transition-shadow"

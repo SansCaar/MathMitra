@@ -11,7 +11,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         status: "failed",
         body: "ok",
       });
-    }
+    } 
     if (!body.teacherId) {
       return NextResponse.json({
         message: "Fields are Required",
