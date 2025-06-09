@@ -50,4 +50,30 @@ model Classes{
   classCode  Int?
 }
 
+model Assignment {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  classCode     Int?
+  teacherId String?
+  dueDate String?
+  submissionCount Int?
+  questionId Json?
 
+}
+
+model Question{
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  question String?
+  answer String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  assignmentId String?
+  teacherId String?
+  classCode     Int?
+ submissionsCount Int?
+ submittedId Json?
+  
+}
