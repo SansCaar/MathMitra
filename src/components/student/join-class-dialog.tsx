@@ -55,8 +55,8 @@ export function JoinClassDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full bg-success hover:bg-green-600 text-black font-semibold rounded-xl h-12">
-          <Plus className="w-5 h-5 mr-2 text-black" />
+        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-12">
+          <Plus className="w-5 h-5 mr-2 text-white" />
           Join Class
         </Button>
       </DialogTrigger>

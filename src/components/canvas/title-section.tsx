@@ -17,7 +17,7 @@ const TitleSection = () => {
         title =
           (await axios.post(`/api/questions/viewOne`, {
             questionId: slug,
-          })) ?? "Playground";
+          }))?.data.title ?? "Playground";
         console.log(title);
       } catch (err) {
         title = "Playground";
