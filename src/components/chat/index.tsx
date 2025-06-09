@@ -5,10 +5,32 @@ import { v4 as uuid } from "uuid";
 import BottomInputSection from "./bottom-input-section";
 import { Mic, SendHorizontal } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
+import { getImageBlob, getImageDataUrl} from "@dgmjs/export"
+import { CanvasAtom } from "@src/atoms/CanvasAtom";
 
 const ChatArea = ({}) => {
   const chat = useAtomValue(ChatAtom);
   const setChat = useSetAtom(ChatAtom);
+
+  const canvasEditor = useAtomValue(CanvasAtom);
+
+  const exportImage =async () => {
+    if (!canvasEditor) return;
+    const dataImage=await getImageDataUrl(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
+    console.log(dataImage);
+  }
+  const exportImageBlob =async () => {
+    if (!canvasEditor) return;
+    const dataImage=await getImageBlob(canvasEditor.canvas, canvasEditor.getPages()[0], [], {scale:0.5});
+    console.log(dataImage);
+  }
+
+  const exportJsonPaths = async ()=> {
+    if (!canvasEditor) return;
+  const json = await canvasEditor.saveToJSON()
+    console.log(json);
+
+  }
 
   const addMessage = ({
     message,
@@ -36,11 +58,17 @@ const ChatArea = ({}) => {
         {chat.messages.map((message, index) => {
           return (
             <>
-              <div key={`message-${message.id}`} className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800">
+              <div
+                key={`message-${message.id}`}
+                className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
+              >
                 {message.message}
               </div>
               {message.response && (
-                <div key={`response-${message.id}`} className=" w-full  rounded-md p-2 text-md text-gray-800">
+                <div
+                  key={`response-${message.id}`}
+                  className=" w-full  rounded-md p-2 text-md text-gray-800"
+                >
                   {message.response}
                 </div>
               )}
@@ -58,10 +86,12 @@ const ChatArea = ({}) => {
           <button
             onClick={() => {
               console.log(chat);
+              exportImage();
+              exportJsonPaths();
               addMessage({
                 user: "GPT",
                 message: "Hello",
-                response: "Meowwwwwww"
+                response: "Meowwwwwww",
               });
             }}
             className="h-full  aspect-square flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
