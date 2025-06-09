@@ -5,33 +5,55 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Plus, BookOpen, Users } from "lucide-react";
 import { CreateClassDialog, type ClassFormData } from "./create-class-dialog";
-
 import { useToast } from "../hooks/use-toast";
 import type { Class } from "./my-classes";
 import Link from "next/link";
+import { useAtomValue, useSetAtom } from "jotai";
+import { fetchClasses, MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
 
 interface ActionCardsProps {
-  classes: Class[];
   onClassCreated: (newClass: Class) => void;
 }
 
-export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
+export function ActionCards({ onClassCreated }: ActionCardsProps) {
+  const user = useAtomValue(UserAtom);
+  const setClasses = useSetAtom(MyClassesAtom);
   const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
   const [isAssignmentDialogOpen, setIsAssignmentDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleCreateClass = (classData: ClassFormData) => {
-    const newClass = {
-      id: `class-${Date.now()}`,
-      ...classData,
-    };
+  const handleCreateClass = async (classData: ClassFormData) => {
+    try {
+      const newClass: Class = {
+        id: `class-${Date.now()}`,
+        name: classData.name,
+        subject: classData.subject,
+        description: classData.description,
+        section: classData.section,
+        classCode: classData.classCode.toString(),
+        studentsCount: classData.studentsCount,
+        assignmentsCount: classData.assignmentsCount,
+      };
 
-    onClassCreated(newClass);
+      onClassCreated(newClass);
 
-    toast({
-      title: "Class created",
-      description: `${classData.name} has been created successfully.`,
-    });
+      // Refresh the classes list after creating a new class
+      if (user?.id) {
+        await fetchClasses({ userId: user.id, setMyClasses: setClasses });
+      }
+
+      toast({
+        title: "Class created",
+        description: `${classData.name} has been created successfully.`,
+      });
+    } catch (error) {
+      console.error("Error creating class:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create class. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

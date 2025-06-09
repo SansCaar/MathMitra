@@ -33,7 +33,8 @@ import {
   Calendar,
   ArrowLeft,
 } from "lucide-react";
-
+import { fetchClasses, MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 interface Question {
   id: string;
   question: string;
@@ -49,9 +50,11 @@ interface ClassOption {
 import axios from "axios";
 
 export default function CreateAssignment() {
+  const user = useAtomValue(UserAtom);
+  const setUser = useSetAtom(UserAtom);
+  const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [classes, setClasses] = useState<ClassOption[]>([]);
   const [assignmentName, setAssignmentName] = useState("");
   const [assignmentDescription, setAssignmentDescription] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
@@ -65,15 +68,15 @@ export default function CreateAssignment() {
   }>({ type: null, message: "" });
 
   useEffect(() => {
-    const classesData = searchParams.get("classes");
-    if (classesData) {
-      try {
-        const parsedClasses = JSON.parse(classesData);
-        setClasses(parsedClasses);
-      } catch (error) {
-        console.error("Error parsing classes data:", error);
-      }
-    }
+    // const classesData = searchParams.get("classes");
+    // if (classesData) {
+    //   try {
+    //     const parsedClasses = JSON.parse(classesData);
+    //     setClasses(parsedClasses);
+    //   } catch (error) {
+    //     console.error("Error parsing classes data:", error);
+    //   }
+    // }
   }, [searchParams]);
 
   const handleFixAssignment = () => {
@@ -116,7 +119,15 @@ export default function CreateAssignment() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
+      if (!classes) {
+        throw new Error("No classes available");
+      }
+
       const classData = classes.find((c) => c.id === selectedClass);
+      if (!classData) {
+        throw new Error("Selected class not found");
+      }
+      alert(classData.classCode);
 
       const CreateAssignmentResponse = await axios.post(
         "/api/assignments/create",
@@ -124,50 +135,42 @@ export default function CreateAssignment() {
           title: assignmentName,
           description: assignmentDescription,
           classId: selectedClass,
-          teacherId: "121323",
+          teacherId: user?.id || "",
           submissionCount: 0,
-          classCode: classData?.classCode,
+          classCode: classData.classCode,
           dueDate: dueDate,
-          questionId: questions.map((q) => ({
-            id: q.id,
-          })),
         }
       );
 
-      console.log(CreateAssignmentResponse);
-
-      // console.log({
-      //   assignmentName: assignmentName,
-      //   description: assignmentDescription,
-      //   classId: selectedClass,
-      //   dueDate: dueDate,
-      //   questions: questions.map((q) => ({
-      //     id: q.id,
-      //     question: q.question,
-      //     solution: q.solution,
-      //   })),
-      // });
-
-      // Simulate API call
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // const selectedClassData = classes.find((c) => c.id === selectedClass);
-      // const validQuestions = questions.filter((q) => q.question.trim());
+      await Promise.all(
+        questions.map(async (question) => {
+          const createQuestion = await axios.post("/api/questions/create", {
+            assignmentId: CreateAssignmentResponse.data.body.id,
+            teacherId: user?.id,
+            classCode: classData.classCode,
+            submissionsCount: 0,
+            question: question.question,
+            answer: question?.solution,
+          });
+          console.log(createQuestion);
+        })
+      );
 
       setSubmitStatus({
         type: "success",
-        message: "done",
+        message: "Assignment created successfully",
       });
 
-      setTimeout(() => {
-        setAssignmentName("");
-        setAssignmentDescription("");
-        setSelectedClass("");
-        setIsAssignmentFixed(false);
-        setQuestions([]);
-        setSubmitStatus({ type: null, message: "" });
-        router.push("/teacher");
-      }, 3000);
+      // Reset form and redirect after success
+      // setTimeout(() => {
+      //   setAssignmentName("");
+      //   setAssignmentDescription("");
+      //   setSelectedClass("");
+      //   setIsAssignmentFixed(false);
+      //   setQuestions([]);
+      //   setSubmitStatus({ type: null, message: "" });
+      //   router.push("/teacher");
+      // }, 2000);
     } catch (error) {
       console.error("Error creating assignment:", error);
       setSubmitStatus({
@@ -182,7 +185,7 @@ export default function CreateAssignment() {
     }
   };
 
-  const selectedClassData = classes.find((c) => c.id === selectedClass);
+  const selectedClassData = classes?.find((c) => c.id === selectedClass);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -286,7 +289,7 @@ export default function CreateAssignment() {
                       <SelectValue placeholder="Choose a class for this assignment" />
                     </SelectTrigger>
                     <SelectContent>
-                      {classes.map((classItem) => (
+                      {(classes || []).map((classItem) => (
                         <SelectItem key={classItem.id} value={classItem.id}>
                           <div className="flex items-center justify-between w-full">
                             <span className="font-medium">
@@ -307,10 +310,7 @@ export default function CreateAssignment() {
                       </div>
                       <div className="text-xs text-blue-600 mt-1">
                         Class Code: {selectedClassData.classCode} •{" "}
-                        {selectedClassData.studentsCount
-                          ? selectedClassData.studentsCount
-                          : 10}{" "}
-                        students
+                        {selectedClassData.studentCount || 0} students
                       </div>
                     </div>
                   )}

@@ -26,9 +26,9 @@ export const POST = async (req: NextRequest) => {
     });
     console.log(createQuestion);
     return NextResponse.json({
-      message: "Class created",
+      message: "Question created",
       status: "success",
-      body: createQuestion,
+      data: createQuestion,
     });
   } catch (err) {
     console.log(err);

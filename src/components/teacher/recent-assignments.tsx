@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
-import { Calendar, Clock, Users, MoreHorizontal } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
-
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Calendar, Clock, Users, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useAtomValue, useSetAtom } from "jotai";
+import { UserAtom } from "@src/atoms/UserAtom";
 interface Assignment {
-  id: string
-  title: string
-  subject: string
-  dueDate: string
-  studentsCount: number
-  status: "active" | "draft" | "completed"
-  createdAt: string
+  id: string;
+  title: string;
+  subject: string;
+  dueDate: string;
+  studentsCount: number;
+  status: "active" | "draft" | "completed";
+  createdAt: string;
 }
 
 const mockAssignments: Assignment[] = [
@@ -53,34 +59,38 @@ const mockAssignments: Assignment[] = [
     status: "draft",
     createdAt: "2024-01-07",
   },
-]
+];
 
 export function RecentAssignments() {
+  const user = useAtomValue(UserAtom);
+
   const getStatusColor = (status: Assignment["status"]) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-800 hover:bg-green-200"
+        return "bg-green-100 text-green-800 hover:bg-green-200";
       case "draft":
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
       case "completed":
-        return "bg-slate-100 text-slate-800 hover:bg-slate-200"
+        return "bg-slate-100 text-slate-800 hover:bg-slate-200";
       default:
-        return "bg-slate-100 text-slate-800"
+        return "bg-slate-100 text-slate-800";
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
-    })
-  }
+    });
+  };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-slate-900">Recent Assignments</h2>
+        <h2 className="text-xl font-semibold text-slate-900">
+          Recent Assignments
+        </h2>
         <Button variant="outline" size="sm">
           View All
         </Button>
@@ -88,16 +98,25 @@ export function RecentAssignments() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {mockAssignments.map((assignment) => (
-          <Card key={assignment.id} className="hover:shadow-md transition-shadow">
+          <Card
+            key={assignment.id}
+            className="hover:shadow-md transition-shadow"
+          >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle className="text-base font-medium text-slate-900 mb-1">{assignment.title}</CardTitle>
+                  <CardTitle className="text-base font-medium text-slate-900 mb-1">
+                    {assignment.title}
+                  </CardTitle>
                   <p className="text-sm text-slate-600">{assignment.subject}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="secondary" className={getStatusColor(assignment.status)}>
-                    {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                  <Badge
+                    variant="secondary"
+                    className={getStatusColor(assignment.status)}
+                  >
+                    {assignment.status.charAt(0).toUpperCase() +
+                      assignment.status.slice(1)}
                   </Badge>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -108,7 +127,9 @@ export function RecentAssignments() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem>Edit</DropdownMenuItem>
                       <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">
+                        Delete
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -136,5 +157,5 @@ export function RecentAssignments() {
         ))}
       </div>
     </div>
-  )
+  );
 }

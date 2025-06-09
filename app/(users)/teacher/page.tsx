@@ -15,18 +15,24 @@ export default function TeacherDashboard() {
   const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
 
   const classes = useAtomValue(MyClassesAtom);
+
   const setClasses = useSetAtom(MyClassesAtom);
   console.log(classes);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) fetchClasses({ userId: user.id, setMyClasses: setClasses }).then(() => setIsLoading(false));
+    if (user)
+      fetchClasses({ userId: user.id, setMyClasses: setClasses }).then(() =>
+        setIsLoading(false)
+      );
   }, [user]);
 
   const handleClassCreated = (newClass: Class) => {
     setClasses((prev) => [...prev, newClass]);
     setIsLoading(true);
-    fetchClasses({ userId: user.id, setMyClasses: setClasses }).then(() => setIsLoading(false));
+    fetchClasses({ userId: user.id, setMyClasses: setClasses }).then(() =>
+      setIsLoading(false)
+    );
   };
 
   return (
@@ -46,11 +52,18 @@ export default function TeacherDashboard() {
         {isLoading ? (
           <div className="text-center py-8">Loading classes...</div>
         ) : (
-          <MyClasses classes={classes} onCreateClass={()=>setIsClassDialogOpen(true)} />
+          <MyClasses
+            classes={classes}
+            onCreateClass={() => setIsClassDialogOpen(true)}
+          />
         )}
 
         <RecentAssignments />
-        <CreateClassDialog open={isClassDialogOpen} onOpenChange={setIsClassDialogOpen} onCreateClass={(newClass:Class)=>handleClassCreated(newClass)} />
+        <CreateClassDialog
+          open={isClassDialogOpen}
+          onOpenChange={setIsClassDialogOpen}
+          onCreateClass={(newClass: Class) => handleClassCreated(newClass)}
+        />
       </main>
     </div>
   );

@@ -40,15 +40,14 @@ export function CreateClassDialog({
   onOpenChange,
   onCreateClass,
 }: CreateClassDialogProps) {
-
   const user = useAtomValue(UserAtom);
   const [formData, setFormData] = useState<ClassFormData>({
     name: "",
     subject: "",
     description: "",
     section: "",
-    teacherId: user?.id,
-    classCode: 0,
+    teacherId: user?.id || "",
+    classCode: Math.floor(10000 + Math.random() * 90000), // Generate a random 5-digit code
     studentsCount: 0,
     assignmentsCount: 0,
   });
@@ -58,19 +57,41 @@ export function CreateClassDialog({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
+      // Validate required fields
+      if (
+        !formData.name ||
+        !formData.subject ||
+        !formData.section ||
+        !formData.teacherId
+      ) {
+        throw new Error("Please fill in all required fields");
+      }
+
       const response = await fetch("/api/classes/createClass", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          subject: formData.subject,
+          description: formData.description,
+          section: formData.section,
+          teacherId: user?.id,
+          studentsCount: 0,
+          assignmentsCount: 0,
+        }),
       });
 
       const data = await response.json();
@@ -79,16 +100,24 @@ export function CreateClassDialog({
         throw new Error(data.message || "Failed to create class");
       }
 
+      // Call the onCreateClass callback with the form data
       onCreateClass(formData);
-      onOpenChange(false);
+
+      // Reset form and close dialog
       setFormData({
         name: "",
         subject: "",
         description: "",
         section: "",
+        teacherId: user?.id || "",
+        classCode: Math.floor(10000 + Math.random() * 90000),
+        studentsCount: 0,
+        assignmentsCount: 0,
       });
+      onOpenChange(false);
     } catch (error) {
       console.error("Error creating class:", error);
+      // You might want to show an error message to the user here
     } finally {
       setIsSubmitting(false);
     }
