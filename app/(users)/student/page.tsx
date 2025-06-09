@@ -52,16 +52,49 @@ const classes = useAtomValue(MyClassesAtom);
   const user = useAtomValue(UserAtom);
   const [assignments, setAssignments] =useState<Assignment[]>([]);
 
+
+  const fetchAssignments = async () => {
+    const response = await fetch('/api/assignments/viewAll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+          },
+            body: JSON.stringify({
+              returnResBy: "studentId",
+              studentId: user?.id,
+            }),
+            });
+    const data = await response.json();
+    setAssignments(data.data);
+  };
+
+
   useEffect(() => {
+
+
     if(!user) return
+
+
     if (user?.id && user?.role) {
       fetchClasses({
         userId: user?.id,
         role: user?.role,
         setMyClasses: setClasses,
       });
+    fetchAssignments()
     }
   }, [user]);
+
+
+  const handleClassJoin = async (classCode: number) => {
+    fetchClasses({
+      userId: user?.id ?? '',
+      role: user?.role,
+      setMyClasses: setClasses,
+    });
+    fetchAssignments()
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -120,7 +153,7 @@ const classes = useAtomValue(MyClassesAtom);
                   </p>
                 </div>
               </div>
-              <JoinClassDialog />
+              <JoinClassDialog handleClassJoin={handleClassJoin} />
             </CardContent>
           </Card>
         </div>

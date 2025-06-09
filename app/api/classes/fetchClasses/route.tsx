@@ -13,15 +13,22 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       });
     }
     if (body.role == "student") {
-      return 
-
+      const classes = await prisma.classes.findMany({});
+      const studentClasses = classes.filter(
+        (classItem) =>
+          Array.isArray(classItem.studentId) &&
+              classItem.studentId.some((student: any) => student?.id === body.userId)
+            );
+      return NextResponse.json({
+        status: "success",
+        data: studentClasses,
+        });
     } else {
       const classData = await prisma.classes.findMany({
         where: {
           teacherId: body.userId,
         },
       });
-      console.log(classData);
       if (!classData) {
         return NextResponse.json({
           message: "Class not found",
