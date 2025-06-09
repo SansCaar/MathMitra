@@ -3,6 +3,7 @@ import { setupSteamingRecognition } from "@src/server/ai/audio";
 import { generateAnswerStream } from "@src/server/ai/genAi";
 import http from "http";
 import { Server } from "socket.io";
+import { v4 as uuid } from "uuid";
 
 export const server = http.createServer();
 export let io = new Server(server, {
@@ -49,13 +50,26 @@ io.of("/chat").on("connection", (socket) => {
   });
 });
 
-let { streamingRecognizer, audioId } = await setupSteamingRecognition();
+let { streamingRecognizer } = await setupSteamingRecognition();
 let isCallbackSet = false;
-let timeOut: NodeJS.Timeout | null = null;
 
-io.of("/audio").on("connection", async (socket) => {
+let audioNamespace = io.of("/audio");
+let isDisabled = false;
+
+audioNamespace.on("connection", async (socket) => {
+  isDisabled = false;
+  const audioId = uuid();
+
   if (!isCallbackSet) {
+    let timeout: NodeJS.Timeout | undefined;
     streamingRecognizer?.on("data", (data) => {
+      if (timeout) clearTimeout(timeout);
+
+      timeout = setTimeout(() => {
+        socket.emit("timeout", audioId);
+        streamingRecognizer?.end();
+        isDisabled = true;
+      }, 4_000);
       socket.send(JSON.stringify({ success: true, data, audioId }));
     });
 
@@ -63,22 +77,14 @@ io.of("/audio").on("connection", async (socket) => {
   }
 
   socket.on("transcribe", async (arrayBuffer: ArrayBuffer) => {
-    if (timeOut) {
-      clearTimeout(timeOut);
-    }
-
-    timeOut = setTimeout(async () => {
-      console.log("resetting the streaming Recorgnizer");
+    setTimeout(async () => {
       streamingRecognizer?.end();
-
+      socket.emit("maxtimeout", audioId);
       streamingRecognizer = (await setupSteamingRecognition())
         .streamingRecognizer;
-      streamingRecognizer?.on("data", (data) => {
-        console.log("data", data);
-        socket.send(JSON.stringify({ success: true, data, audioId }));
-      });
-    }, 6 * 1000);
+    }, 350_000);
 
+    if (isDisabled) return;
     streamingRecognizer?.write(arrayBuffer);
   });
 });

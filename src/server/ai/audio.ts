@@ -22,9 +22,8 @@ export const setupSteamingRecognition = async () => {
     },
     interimResults: true,
   });
-  const audioId = uuid();
 
-  return { streamingRecognizer, audioId };
+  return { streamingRecognizer };
 };
 
 export const closeAudioTranscription = async () => {

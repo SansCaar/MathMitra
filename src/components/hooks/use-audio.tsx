@@ -44,6 +44,7 @@ const useAudio = () => {
         audio: {
           channelCount: 1,
           sampleRate: 16000,
+          noiseSuppression: true,
         },
       });
 
@@ -59,7 +60,7 @@ const useAudio = () => {
         }
       };
 
-      mediaRecorder.current.start(1000);
+      mediaRecorder.current.start(10);
       setChatAtom((prev) => ({
         ...prev,
         speaker: "user",
@@ -91,8 +92,13 @@ const useAudio = () => {
     }
   };
 
+  audioSocket?.current?.on("timeout", (audioId) => {
+    console.log("timeout", audioId);
+  });
+
   function updateTranscriptionDataState() {
     let final = "";
+    console.log("updating");
 
     audioSocket.current?.on("message", (m) => {
       const response: tgoogleTranscriptionResponse = JSON.parse(m);
