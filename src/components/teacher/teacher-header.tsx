@@ -10,6 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
+import Link from "next/link";
 
 interface TeacherHeaderProps {
   teacherName: string;
@@ -31,7 +32,9 @@ export function TeacherHeader({
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+            <Link href="/teacher">
             <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+            </Link>
           </div>
 
           <DropdownMenu>

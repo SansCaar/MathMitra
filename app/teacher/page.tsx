@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TeacherHeader } from "../../src/components/teacher/teacher-header";
-import { MyClasses } from "../../src/components/teacher/my-classes";
-import { RecentAssignments } from "../../src/components/teacher/recent-assignments";
-import type { Class } from "../../src/components/teacher/my-classes";
-import { ActionCards } from "../../src/components/teacher/action-cards";
+import { TeacherHeader } from "@components/teacher/teacher-header";
+import { MyClasses } from "@components/teacher/my-classes";
+import { RecentAssignments } from "@components/teacher/recent-assignments";
+import type { Class } from "@components/teacher/my-classes";
+import { ActionCards } from "@components/teacher/action-cards";
 
 export default function TeacherDashboard() {
   const teacherData = {
@@ -51,10 +51,6 @@ export default function TeacherDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <TeacherHeader
-        teacherName={teacherData.name}
-        teacherEmail={teacherData.email}
-      />
 
       <main className="container mx-auto px-8 py-8">
         <div className="mb-8">

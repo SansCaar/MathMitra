@@ -1,14 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@components/ui/button"
-import { Input } from "@components/ui/input"
-import { Label } from "@components/ui/label"
-import { Textarea } from "@components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
-import { Badge } from "@components/ui/badge"
-import { Alert, AlertDescription } from "@components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
+import { useState } from "react";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
+import { Textarea } from "@components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { Badge } from "@components/ui/badge";
+import { Alert, AlertDescription } from "@components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 import {
   Plus,
   Trash2,
@@ -23,119 +29,148 @@ import {
   CheckSquare,
   ArrowRight,
   Users,
-} from "lucide-react"
+  ArrowLeft,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Question {
-  id: string
-  question: string
-  solution: string
+  id: string;
+  question: string;
+  solution: string;
 }
 
 interface ClassOption {
-  id: string
-  name: string
-  code: string
-  studentCount: number
+  id: string;
+  name: string;
+  code: string;
+  studentCount: number;
 }
 
 // Mock class data - replace with actual data from your API
 const mockClasses: ClassOption[] = [
-  { id: "1", name: "Mathematics - Algebra Basics", code: "24640", studentCount: 23 },
+  {
+    id: "1",
+    name: "Mathematics - Algebra Basics",
+    code: "24640",
+    studentCount: 23,
+  },
   { id: "2", name: "My Maths Class", code: "41796", studentCount: 28 },
   { id: "3", name: "Science - Physics 101", code: "35821", studentCount: 19 },
   { id: "4", name: "English Literature", code: "52947", studentCount: 31 },
   { id: "5", name: "History - World War II", code: "68394", studentCount: 25 },
-]
+];
 
 export default function CreateAssignment() {
-  const [assignmentName, setAssignmentName] = useState("")
-  const [assignmentDescription, setAssignmentDescription] = useState("")
-  const [selectedClass, setSelectedClass] = useState("")
-  const [isAssignmentFixed, setIsAssignmentFixed] = useState(false)
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [assignmentName, setAssignmentName] = useState("");
+  const [assignmentDescription, setAssignmentDescription] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [isAssignmentFixed, setIsAssignmentFixed] = useState(false);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
-    type: "success" | "error" | null
-    message: string
-  }>({ type: null, message: "" })
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
+
+  const router = useRouter();
 
   const handleFixAssignment = () => {
-    if (assignmentName.trim() && assignmentDescription.trim() && selectedClass) {
-      setIsAssignmentFixed(true)
+    if (
+      assignmentName.trim() &&
+      assignmentDescription.trim() &&
+      selectedClass
+    ) {
+      setIsAssignmentFixed(true);
     }
-  }
+  };
 
   const handleEditAssignment = () => {
-    setIsAssignmentFixed(false)
-    setSubmitStatus({ type: null, message: "" })
-  }
+    setIsAssignmentFixed(false);
+    setSubmitStatus({ type: null, message: "" });
+  };
 
   const addQuestion = () => {
     const newQuestion: Question = {
       id: Date.now().toString(),
       question: "",
       solution: "",
-    }
-    setQuestions([...questions, newQuestion])
-  }
+    };
+    setQuestions([...questions, newQuestion]);
+  };
 
   const updateQuestion = (id: string, field: keyof Question, value: string) => {
-    setQuestions(questions.map((q) => (q.id === id ? { ...q, [field]: value } : q)))
-  }
+    setQuestions(
+      questions.map((q) => (q.id === id ? { ...q, [field]: value } : q)),
+    );
+  };
 
   const removeQuestion = (id: string) => {
-    setQuestions(questions.filter((q) => q.id !== id))
-  }
+    setQuestions(questions.filter((q) => q.id !== id));
+  };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true)
-    setSubmitStatus({ type: null, message: "" })
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: "" });
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const selectedClassData = mockClasses.find((c) => c.id === selectedClass)
-      const validQuestions = questions.filter((q) => q.question.trim())
+      const selectedClassData = mockClasses.find((c) => c.id === selectedClass);
+      const validQuestions = questions.filter((q) => q.question.trim());
 
       setSubmitStatus({
         type: "success",
         message: `Assignment "${assignmentName}" created successfully for ${selectedClassData?.name} with ${validQuestions.length} questions!`,
-      })
+      });
 
       setTimeout(() => {
-        setAssignmentName("")
-        setAssignmentDescription("")
-        setSelectedClass("")
-        setIsAssignmentFixed(false)
-        setQuestions([])
-        setSubmitStatus({ type: null, message: "" })
-      }, 3000)
+        setAssignmentName("");
+        setAssignmentDescription("");
+        setSelectedClass("");
+        setIsAssignmentFixed(false);
+        setQuestions([]);
+        setSubmitStatus({ type: null, message: "" });
+      }, 3000);
     } catch (error) {
-      console.error("Error creating assignment:", error)
+      console.error("Error creating assignment:", error);
       setSubmitStatus({
         type: "error",
-        message: error instanceof Error ? error.message : "An unexpected error occurred",
-      })
+        message:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const selectedClassData = mockClasses.find((c) => c.id === selectedClass)
+  const selectedClassData = mockClasses.find((c) => c.id === selectedClass);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         {/* Header Section */}
-        <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-xl flex items-center justify-center">
-              <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </div>
-            Create Assignment
-          </h1>
-          <p className="text-base md:text-lg text-gray-600">Design and distribute new assignments to your students</p>
+        <div className="flex justify-between items-start">
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </div>
+              Create Assignment
+            </h1>
+            <p className="text-base md:text-lg text-gray-600">
+              Design and distribute new assignments to your students
+            </p>
+          </div>
+
+          <Button
+            onClick={() => router.back()}
+            className="group border-black bg-transparent border-2 hover:bg-black  p-4 aspect-square  rounded-full"
+          >
+            <ArrowLeft className="w-24 h-24 text-black hover:text-gray-50 group-hover:text-white" />
+          </Button>
         </div>
 
         {/* Status Alert */}
@@ -186,7 +221,10 @@ export default function CreateAssignment() {
               </CardHeader>
               <CardContent className="px-6 md:px-8 space-y-6 bg-white">
                 <div className="space-y-3">
-                  <Label htmlFor="class-select" className="text-base font-semibold text-gray-900">
+                  <Label
+                    htmlFor="class-select"
+                    className="text-base font-semibold text-gray-900"
+                  >
                     Select Class
                   </Label>
                   <Select
@@ -203,7 +241,9 @@ export default function CreateAssignment() {
                       {mockClasses.map((classItem) => (
                         <SelectItem key={classItem.id} value={classItem.id}>
                           <div className="flex items-center justify-between w-full">
-                              <span className="font-medium">{classItem.name}</span>
+                            <span className="font-medium">
+                              {classItem.name}
+                            </span>
                           </div>
                         </SelectItem>
                       ))}
@@ -213,16 +253,22 @@ export default function CreateAssignment() {
                     <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
                       <div className="flex items-center gap-2 text-sm text-blue-800">
                         <Users className="w-4 h-4" />
-                        <span className="font-medium">Selected: {selectedClassData.name}</span>
+                        <span className="font-medium">
+                          Selected: {selectedClassData.name}
+                        </span>
                       </div>
                       <div className="text-xs text-blue-600 mt-1">
-                        Class Code: {selectedClassData.code} • {selectedClassData.studentCount} students
+                        Class Code: {selectedClassData.code} •{" "}
+                        {selectedClassData.studentCount} students
                       </div>
                     </div>
                   )}
                 </div>
                 <div className="space-y-3">
-                  <Label htmlFor="assignment-name" className="text-base font-semibold text-gray-900">
+                  <Label
+                    htmlFor="assignment-name"
+                    className="text-base font-semibold text-gray-900"
+                  >
                     Assignment Name
                   </Label>
                   <Input
@@ -236,7 +282,10 @@ export default function CreateAssignment() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="assignment-description" className="text-base font-semibold text-gray-900">
+                  <Label
+                    htmlFor="assignment-description"
+                    className="text-base font-semibold text-gray-900"
+                  >
                     Description
                   </Label>
                   <Textarea
@@ -250,12 +299,16 @@ export default function CreateAssignment() {
                   />
                 </div>
 
-
                 {!isAssignmentFixed && (
                   <Button
                     onClick={handleFixAssignment}
-                    disabled={!assignmentName.trim() || !assignmentDescription.trim() || !selectedClass || isSubmitting}
-                    className="w-full h-12 bg-primary hover:bg-blue-600 text-white font-semibold rounded-xl text-base"
+                    disabled={
+                      !assignmentName.trim() ||
+                      !assignmentDescription.trim() ||
+                      !selectedClass ||
+                      isSubmitting
+                    }
+                    className="w-full h-12 bg-blue-600 hover:bg-blue-700"
                   >
                     <Lock className="w-5 h-5 mr-2" />
                     Create Assignment
@@ -310,14 +363,23 @@ export default function CreateAssignment() {
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Plus className="w-8 h-8 text-gray-400" />
                       </div>
-                      <p className="text-lg font-medium">No questions added yet</p>
-                      <p className="text-base">Click "Add Question" to get started</p>
+                      <p className="text-lg font-medium">
+                        No questions added yet
+                      </p>
+                      <p className="text-base">
+                        Click "Add Question" to get started
+                      </p>
                     </div>
                   ) : (
                     questions.map((question, index) => (
-                      <Card key={question.id} className="border-2 border-gray-200 rounded-2xl overflow-hidden">
+                      <Card
+                        key={question.id}
+                        className="border-2 border-gray-200 rounded-2xl overflow-hidden"
+                      >
                         <CardHeader className="bg-gray-50 border-b border-gray-200 flex flex-row items-center justify-between space-y-0 pb-4">
-                          <h4 className="text-lg font-bold text-gray-900">Question {index + 1}</h4>
+                          <h4 className="text-lg font-bold text-gray-900">
+                            Question {index + 1}
+                          </h4>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -340,7 +402,13 @@ export default function CreateAssignment() {
                               id={`question-${question.id}`}
                               placeholder="Enter your question here..."
                               value={question.question}
-                              onChange={(e) => updateQuestion(question.id, "question", e.target.value)}
+                              onChange={(e) =>
+                                updateQuestion(
+                                  question.id,
+                                  "question",
+                                  e.target.value,
+                                )
+                              }
                               rows={3}
                               disabled={isSubmitting}
                               className="text-base border-2 border-gray-300 focus:border-primary rounded-xl resize-none"
@@ -351,13 +419,22 @@ export default function CreateAssignment() {
                               htmlFor={`solution-${question.id}`}
                               className="text-base font-semibold text-gray-900"
                             >
-                              Solution <span className="text-gray-500 font-normal">(Optional)</span>
+                              Solution{" "}
+                              <span className="text-gray-500 font-normal">
+                                (Optional)
+                              </span>
                             </Label>
                             <Textarea
                               id={`solution-${question.id}`}
                               placeholder="Enter the solution or answer key (optional)..."
                               value={question.solution}
-                              onChange={(e) => updateQuestion(question.id, "solution", e.target.value)}
+                              onChange={(e) =>
+                                updateQuestion(
+                                  question.id,
+                                  "solution",
+                                  e.target.value,
+                                )
+                              }
                               rows={3}
                               disabled={isSubmitting}
                               className="text-base border-2 border-gray-300 focus:border-primary rounded-xl resize-none"
@@ -395,10 +472,13 @@ export default function CreateAssignment() {
                     </div>
 
                     <div className="space-y-3">
-                      <h3 className="text-2xl font-bold text-gray-900">Create Your Assignment</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">
+                        Create Your Assignment
+                      </h3>
                       <p className="text-gray-600 max-w-md">
-                        Fill in the assignment details and select a class on the left, then click "Fix Assignment
-                        Details" to start adding questions.
+                        Fill in the assignment details and select a class on the
+                        left, then click "Fix Assignment Details" to start
+                        adding questions.
                       </p>
                     </div>
 
@@ -448,6 +528,5 @@ export default function CreateAssignment() {
         )}
       </div>
     </div>
-  )
+  );
 }
-
