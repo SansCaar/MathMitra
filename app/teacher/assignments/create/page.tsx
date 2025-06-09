@@ -351,7 +351,7 @@ export default function CreateAssignment() {
                     onClick={addQuestion}
                     size="sm"
                     disabled={isSubmitting}
-                    className="bg-success hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-xl"
+                    className="bg-green-400 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-xl"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Question
