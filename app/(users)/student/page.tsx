@@ -1,45 +1,28 @@
-import { Suspense } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { Badge } from "@components/ui/badge";
+import { Badge } from "@\components/ui/badge";
 import { Button } from "@components/ui/button";
 import {
   Play,
   Users,
   BookOpen,
-  Plus,
   Calendar,
   Clock,
   CheckCircle,
   Code,
   FileText,
   Target,
-  TrendingUp,
   User,
   Filter,
 } from "lucide-react";
-import axios from "axios";
-import { UserAtom } from "@src/atoms/UserAtom";
-
 import { JoinClassDialog } from "@components/student/join-class-dialog";
-import { DashboardSkeleton } from "@components/student/dashboard-skeleton";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
+import { fetchClasses, MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
 
 // Types
-interface StudentProfile {
-  id: string;
-  name: string;
-  email: string;
-}
 
-interface ClassData {
-  id: string;
-  name: string;
-  code: string;
-  subject: string;
-  teacher: string;
-  studentCount: number;
-  assignmentCount: number;
-}
 
 interface Assignment {
   id: string;
@@ -54,142 +37,31 @@ interface Assignment {
   completedQuestions: number;
 }
 
-interface PracticeSession {
-  id: string;
-  title: string;
-  questionCount: number;
-  lastAccessed: string;
-  progress: number;
-}
+ 
 
-// Server-side data fetching functions
-async function getStudentProfile(): Promise<StudentProfile> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return {
-    id: "1",
-    name: "Alex",
-    email: "alex@example.com",
-  };
-}
-
-async function getClasses(): Promise<ClassData[]> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 150));
-  return [
-    {
-      id: "1",
-      name: "Mathematics - Algebra Basics",
-      code: "24640",
-      subject: "Mathematics",
-      teacher: "Ms. Johnson",
-      studentCount: 23,
-      assignmentCount: 5,
-    },
-    {
-      id: "2",
-      name: "Science - Physics 101",
-      code: "35821",
-      subject: "Science",
-      teacher: "Mr. Smith",
-      studentCount: 19,
-      assignmentCount: 3,
-    },
-  ];
-}
-
-async function getAssignments(): Promise<Assignment[]> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 200));
-  return [
-    {
-      id: "1",
-      title: "Quadratic Equations Practice",
-      subject: "Mathematics",
-      className: "Mathematics - Algebra Basics",
-      classCode: "24640",
-      dueDate: "Jan 20, 2024",
-      createdDate: "Jan 8, 2024",
-      status: "active",
-      questionCount: 15,
-      completedQuestions: 8,
-    },
-    {
-      id: "2",
-      title: "Newton's Laws Quiz",
-      subject: "Science",
-      className: "Science - Physics 101",
-      classCode: "35821",
-      dueDate: "Jan 18, 2024",
-      createdDate: "Jan 5, 2024",
-      status: "active",
-      questionCount: 10,
-      completedQuestions: 10,
-    },
-    {
-      id: "3",
-      title: "Linear Functions Test",
-      subject: "Mathematics",
-      className: "Mathematics - Algebra Basics",
-      classCode: "24640",
-      dueDate: "Jan 15, 2024",
-      createdDate: "Jan 2, 2024",
-      status: "completed",
-      questionCount: 12,
-      completedQuestions: 12,
-    },
-  ];
-}
-
-async function getPracticeSessions(): Promise<PracticeSession[]> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 120));
-  return [
-    {
-      id: "1",
-      title: "Algebra Practice Set",
-      questionCount: 25,
-      lastAccessed: "2 hours ago",
-      progress: 68,
-    },
-    {
-      id: "2",
-      title: "Physics Problems",
-      questionCount: 18,
-      lastAccessed: "1 day ago",
-      progress: 45,
-    },
-  ];
-}
-
-// Helper functions
-function getStatusColor(status: string) {
-  switch (status) {
-    case "active":
-      return "bg-blue-100 text-blue-800";
-    case "completed":
-      return "bg-green-100 text-green-800";
-    case "overdue":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-}
 
 function getProgressPercentage(completed: number, total: number) {
   return Math.round((completed / total) * 100);
 }
 
 // Main Dashboard Component
-async function StudentDashboard() {
-  // Fetch all data in parallel
-  const [studentProfile, classes, assignments, practiceSessions] =
-    await Promise.all([
-      getStudentProfile(),
-      getClasses(),
-      getAssignments(),
-      getPracticeSessions(),
-    ]);
+export default  function StudentDashboard() {
+const classes = useAtomValue(MyClassesAtom);
+  console.log(classes);
+  const setClasses =useSetAtom(MyClassesAtom);
+  const user = useAtomValue(UserAtom);
+  const [assignments, setAssignments] =useState<Assignment[]>([]);
+
+  useEffect(() => {
+    if(!user) return
+    if (user?.id && user?.role) {
+      fetchClasses({
+        userId: user?.id,
+        role: user?.role,
+        setMyClasses: setClasses,
+      });
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -200,7 +72,7 @@ async function StudentDashboard() {
             <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-xl flex items-center justify-center">
               <User className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            Welcome back, {studentProfile.name}! 👋
+            Welcome back, {user?.name}! 👋{" "}
           </h1>
           <p className="text-base md:text-lg text-gray-600">
             Here's what's happening with your studies today.
@@ -211,8 +83,8 @@ async function StudentDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Playground */}
           <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2 ">
-            <CardContent className="px-4 md:px-6">
-              <div className="flex items-center gap-4 mb-4">
+            <CardContent className="px-4 md:px-6  h-full flex flex-col">
+              <div className="flex items-center gap-4 ">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <Play className="w-6 h-6 text-white" />
                 </div>
@@ -225,7 +97,7 @@ async function StudentDashboard() {
                   </p>
                 </div>
               </div>
-              <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 self-end">
+              <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 justify-self-end  mt-auto ">
                 <Code className="w-5 h-5 mr-2" />
                 Start Practicing
               </Button>
@@ -264,12 +136,12 @@ async function StudentDashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {classes.map((classItem) => (
+            {classes?.map((classItem) => (
               <Card
                 key={classItem.id}
                 className="border-0 shadow-lg rounded-2xl overflow-hidden"
               >
-                <CardHeader className="bg-white border-b border-gray-100 pb-4">
+                <CardHeader className="bg-white border-b border-gray-100">
                   <div className="flex items-center justify-between">
                     <div>
                       <Badge className="bg-blue-100 text-blue-800 mb-2">
@@ -279,25 +151,25 @@ async function StudentDashboard() {
                         {classItem.name}
                       </CardTitle>
                       <p className="text-gray-600 text-sm">
-                        Teacher: {classItem.teacher}
+                        {classItem.description}
                       </p>
                     </div>
                     <Badge className="bg-primary text-white">
-                      Code: {classItem.code}
+                      Code: {classItem?.classCode?? "No Code"}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6 bg-white">
+                <CardContent className="px-6 bg-white">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Users className="w-4 h-4" />
-                        <span>{classItem.studentCount} students</span>
+                        <span>{classItem.studentCount?? 0} students</span>
                       </div>
-                      <div className="flex items-center gap-1">
+                       <div className="flex items-center gap-1">
                         <FileText className="w-4 h-4" />
-                        <span>{classItem.assignmentCount} assignments</span>
-                      </div>
+                        <span>{classItem?.assignmentsCount?? 0} assignments</span>
+                      </div> 
                     </div>
                   </div>
                   <Button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl">
@@ -334,10 +206,6 @@ async function StudentDashboard() {
                         <h3 className="text-lg font-bold text-gray-900">
                           {assignment.title}
                         </h3>
-                        <Badge className={getStatusColor(assignment.status)}>
-                          {assignment.status.charAt(0).toUpperCase() +
-                            assignment.status.slice(1)}
-                        </Badge>
                       </div>
                       <p className="text-gray-600 mb-3">
                         {assignment.className}
@@ -365,7 +233,7 @@ async function StudentDashboard() {
                         <div className="text-sm font-medium text-gray-900">
                           {getProgressPercentage(
                             assignment.completedQuestions,
-                            assignment.questionCount
+                            assignment.questionCount,
                           )}
                           % Complete
                         </div>
@@ -373,10 +241,7 @@ async function StudentDashboard() {
                           <div
                             className="bg-primary h-2 rounded-full"
                             style={{
-                              width: `${getProgressPercentage(
-                                assignment.completedQuestions,
-                                assignment.questionCount
-                              )}%`,
+                              width: `${getProgressPercentage(assignment.completedQuestions, assignment.questionCount)}%`,
                             }}
                           ></div>
                         </div>
@@ -407,74 +272,7 @@ async function StudentDashboard() {
             ))}
           </div>
         </div>
-
-        {/* Practice Sessions Section */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              My Practice Sessions
-            </h2>
-            <Button className="bg-primary hover:bg-blue-600 text-white rounded-xl">
-              <Plus className="w-4 h-4 mr-2" />
-              New Session
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {practiceSessions.map((session) => (
-              <Card
-                key={session.id}
-                className="border-0 shadow-lg rounded-2xl overflow-hidden"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">
-                        {session.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {session.questionCount} questions
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium text-gray-900">
-                        {session.progress}% Complete
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        Last: {session.lastAccessed}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{ width: `${session.progress}%` }}
-                    ></div>
-                  </div>
-                  <Button className="w-full bg-primary hover:bg-blue-600 text-white font-semibold rounded-xl">
-                    <Play className="w-4 h-4 mr-2" />
-                    Continue Practice
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
 }
-
-// Main Page Component with Suspense
-export default function DashboardPage() {
-  return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <StudentDashboard />
-    </Suspense>
-  );
-}
-
-export const metadata = {
-  title: "Student Dashboard | Learning Platform",
-  description: "View your classes, assignments, and practice sessions",
-};

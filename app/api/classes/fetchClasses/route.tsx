@@ -13,10 +13,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       });
     }
     if (body.role == "student") {
-      return NextResponse.json({
-        message: "teacherId is required",
-        status: "failed",
-      });
+      return 
+
     } else {
       const classData = await prisma.classes.findMany({
         where: {

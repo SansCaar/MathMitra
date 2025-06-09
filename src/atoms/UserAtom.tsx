@@ -44,7 +44,7 @@ export const fetchUser = async ({userId,role, setUser}: {userId:string, setUser:
 };
 
 
-export const fetchClasses = async ({userId, role="teacher", setMyClasses}:{userId:string,role?:string, setMyClasses: any}) => {
+export const fetchClasses = async ({userId, role="teacher", setMyClasses}:{userId:string,role?:string, setMyClasses:any}) => {
   try {
     const response = await fetch("/api/classes/fetchClasses", {
       method: "POST",
