@@ -9,7 +9,7 @@ generator client {
 }
 datasource db {
   provider = "mongodb"
-  url      = "@env(MONGO_URL)"
+  url      = env("MONGO_URL")
 }
 model Student{
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
