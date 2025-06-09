@@ -12,11 +12,11 @@ import {
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UserAtom } from "@src/atoms/UserAtom";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 interface LoginResponse {
   message: string;
@@ -27,6 +27,7 @@ interface LoginResponse {
 export default function LoginForm() {
   const router = useRouter();
 
+  const user = useAtomValue(UserAtom);
   const setUser = useSetAtom(UserAtom);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -67,9 +68,9 @@ export default function LoginForm() {
         // Store the token
         localStorage.setItem("token", data.token);
         setUser(data.user);
-        if(data.user.role === "teacher"){
+        if (data.user.role === "teacher") {
           router.push("/teacher");
-        }else{
+        } else {
           router.push("/1/playground");
         }
       } else {
@@ -82,6 +83,7 @@ export default function LoginForm() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
