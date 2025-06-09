@@ -8,6 +8,7 @@ import { cn } from "@src/utils/cn";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 import { useAtomValue, useSetAtom } from "jotai";
 import TitleSection from "./title-section";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -23,6 +24,7 @@ function Canvas({
 }) {
   const editor = useAtomValue(CanvasAtom);
   const setEditor = useSetAtom(CanvasAtom);
+  const router = useRouter();
 
   const [activeHandler, setActiveHandler] = useState<string>("Freehand");
 

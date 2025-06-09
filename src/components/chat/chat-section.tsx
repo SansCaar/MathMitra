@@ -1,6 +1,6 @@
 import ChatAtom from "@src/atoms/ChatAtom";
-import { convertToLatex } from "@src/utils/latex";
 import { useAtomValue } from "jotai";
+import Latex from "react-latex-next";
 
 const ChatSection = () => {
   const chat = useAtomValue(ChatAtom);
@@ -12,27 +12,38 @@ const ChatSection = () => {
         const isTranscription = message.mode === "transcription";
         return (
           <>
-            <div
-              key={`message-${message.id} - ${index}`}
-              className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
-            >
-              {isTranscription
-                ? convertToLatex(
-                    `${message.finalMessage}  ${message.interimMessage}`,
-                  )
-                : message.message
-                  ? convertToLatex(message.message)
-                  : null}
-            </div>
+            {isTranscription ? (
+              <div
+                key={`message-${message.id} - ${index}`}
+                className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
+              >
+                <Latex>
+                  {message.finalMessage} {message.interimMessage}
+                </Latex>
+              </div>
+            ) : message.message ? (
+              <div
+                key={`message-${message.id} - ${index}`}
+                className="self-end w-fit bg-gray-300 rounded-md p-2 text-md text-gray-800"
+              >
+                <Latex>{message.message}</Latex>
+              </div>
+            ) : null}
 
-            {message.response && (
+            {!isTranscription && !message.message && (
+              <div className="px-2 text-sm text-gray-500">
+                Took a look at the canvas and the probable questions.
+              </div>
+            )}
+
+            {!!message ? (
               <div
                 key={`response-${message.id}`}
                 className=" w-full  rounded-md p-2 text-md text-gray-800"
               >
-                {convertToLatex(message.response)}
+                {<Latex>{message?.response || ""}</Latex>}
               </div>
-            )}
+            ) : null}
           </>
         );
       })}
@@ -42,7 +53,6 @@ const ChatSection = () => {
           className="self-start h-max bg-gray-100 rounded-md p-2 text-md text-gray-800 w-3/4 flex gap-2.5 flex-col animate-pulse"
         >
           Generating............
-
           <div className="message flex gap-2.5 flex-col">
             <div
               key={`message-${chat.messages.length}`}
