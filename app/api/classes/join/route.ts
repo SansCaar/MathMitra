@@ -41,6 +41,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     const existingStudents = Array.isArray(classData.studentId)
       ? (classData.studentId as unknown as StudentData[])
       : [];
+    console.log("EXISTING STUDENTS");
+    console.log(existingStudents);
 
 
     // Check if the user is already a student
@@ -48,7 +50,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       (student) => student.id === body.userId
         );
 
-    if (existingStudent) {
+    if (existingStudent?.id) {
       return NextResponse.json({
         message: "User is already a student",
         status: "failed",
