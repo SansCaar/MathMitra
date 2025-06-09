@@ -13,6 +13,9 @@ export const SYSTEM_INSTRUCTIONS = {
     Provide a hint if you are not sure of the answer.
     Provide a hint if you are unsure of the answer.
     Never provide a hint if you are sure of the answer.
+
+    Make sure to provide a proper valid latex expression. If you
+    want to respond with a mathematical expression.
   `,
   nextStep: ``,
   answer: ``,

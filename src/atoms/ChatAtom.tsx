@@ -1,4 +1,3 @@
-import { Editor } from "@dgmjs/core";
 import { atom } from "jotai";
 import { WebSocket } from "socket.io-client";
 

@@ -3,37 +3,42 @@ import { Mic, SendHorizontal } from "lucide-react";
 import { useChat } from "@components/hooks/use-chat";
 import useAudio from "@components/hooks/use-audio";
 import { cn } from "@src/lib/utils";
+import { Button } from "@components/ui/button";
 
 const BottomInputSection = () => {
   const { handleSubmit } = useChat();
   const { toggleMic, isSpeaking } = useAudio();
 
   return (
-    <div className="w-full flex py-4 gap-2">
-      <button
-        className={cn(
-          "h-full aspect-square flex items-center justify-center bg-gray-400 text-white font-bold p-2.5  rounded",
-          isSpeaking && "bg-blue-500 hover:bg-blue-700",
-        )}
-        onClick={async () => {
-          await toggleMic();
-        }}
-      >
-        <Mic className=" h-full " />
-      </button>
-
-      <div className="justify-end h-max flex-1">
-        <TextToLatex />
-      </div>
-      <div className="h-full">
-        <button
-          onClick={handleSubmit}
-          className="h-full  aspect-square flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
+      <div className="w-full flex py-1 px-2 gap-2 pb-2.5">
+        <Button
+          variant={"outline"}
+          className={cn(!!isSpeaking && "bg-blue-500 hover:bg-blue-700")}
+          onClick={async () => {
+            await toggleMic();
+          }}
+          type="reset"
         >
-          <SendHorizontal className=" h-full " />
-        </button>
+          <Mic className="h-full" />
+        </Button>
+
+        <div className="justify-end h-max flex-1">
+          <TextToLatex />
+        </div>
+
+        <div className="h-full">
+          <Button onClick={handleSubmit} variant={"outline"}>
+            <SendHorizontal className=" h-full " />
+          </Button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 
