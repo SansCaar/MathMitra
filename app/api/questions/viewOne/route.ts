@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+
 const prisma = new PrismaClient();
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
@@ -12,7 +13,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         body: "ok",
       });
     }
-    const classData = await prisma.question.findUnique({
+    const classData = await prisma.question.findFirst({
       where: {
         id: body.questionId,
       },

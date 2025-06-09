@@ -44,3 +44,4 @@ next-env.d.ts
 
 # custom entries
 .keys/
+public/*.mp3
