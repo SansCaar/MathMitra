@@ -13,6 +13,7 @@
     "@dgmjs/export": "^1.0.0",
     "@dgmjs/react": "^1.0.0",
     "@google-cloud/speech": "^7.1.0",
+    "@google-cloud/text-to-speech": "^6.1.0",
     "@google/genai": "^1.4.0",
     "@next/env": "^15.3.3",
     "@prisma/client": "^6.9.0",
