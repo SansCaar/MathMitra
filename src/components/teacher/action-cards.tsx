@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import { Plus, BookOpen, Users } from "lucide-react";
 import { CreateClassDialog, type ClassFormData } from "./create-class-dialog";
 import {

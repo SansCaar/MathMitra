@@ -47,6 +47,7 @@ model Classes{
   updatedAt   DateTime? @updatedAt
   teacherId String?
   studentId Json?
+  classCode  Int?
 }
 
 

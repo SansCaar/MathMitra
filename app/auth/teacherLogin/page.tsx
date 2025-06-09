@@ -50,7 +50,7 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      const response = await axios.post("/api/users/login", {
+      const response = await axios.post("/api/users/teacherLogin", {
         email: formData.email,
         password: formData.password,
       });

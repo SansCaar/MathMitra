@@ -1,9 +1,8 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +10,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+} from "@components/ui/dialog";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
+import { Textarea } from "@components/ui/textarea";
 
 interface CreateClassDialogProps {
   open: boolean;
@@ -27,6 +26,10 @@ export interface ClassFormData {
   subject: string;
   description: string;
   section: string;
+  teacherId: string;
+  classCode: number;
+  studentsCount: number;
+  assignmentsCount: number;
 }
 
 export function CreateClassDialog({
@@ -39,6 +42,10 @@ export function CreateClassDialog({
     subject: "",
     description: "",
     section: "",
+    teacherId: "121323",
+    classCode: 0,
+    studentsCount: 0,
+    assignmentsCount: 0,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,14 +56,26 @@ export function CreateClassDialog({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/classes/createClass", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create class");
+      }
+
       onCreateClass(formData);
-      setIsSubmitting(false);
       onOpenChange(false);
       setFormData({
         name: "",
@@ -64,7 +83,11 @@ export function CreateClassDialog({
         description: "",
         section: "",
       });
-    }, 1000);
+    } catch (error) {
+      console.error("Error creating class:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

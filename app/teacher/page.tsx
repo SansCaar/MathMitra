@@ -46,8 +46,6 @@ export default function TeacherDashboard() {
     },
   ]);
 
-  const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
-
   const handleClassCreated = (newClass: Class) => {
     setClasses((prev) => [...prev, newClass]);
   };
@@ -71,10 +69,7 @@ export default function TeacherDashboard() {
 
         <ActionCards classes={classes} onClassCreated={handleClassCreated} />
 
-        <MyClasses
-          classes={classes}
-          onCreateClass={() => setIsClassDialogOpen(true)}
-        />
+        <MyClasses classes={classes} onCreateClass={() => {}} />
 
         <RecentAssignments />
       </main>

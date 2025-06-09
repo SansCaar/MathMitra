@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const userExists = await prisma.user.findFirst({
+    const userExists = await prisma.student.findFirst({
       where: {
         email: body.email,
       },
