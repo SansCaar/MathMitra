@@ -5,29 +5,36 @@ const prisma = new PrismaClient();
 export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const body = await req.json();
-    if (!body.teacherId) {
+    if (!body.userId) {
       return NextResponse.json({
         message: "teacherId is required",
         status: "failed",
       });
     }
-    const classData = await prisma.classes.findMany({
-      where: {
-        teacherId: body.teacherId,
-      },
-    });
-    console.log(classData);
-    if (!classData) {
+    if (body.role == "student") {
       return NextResponse.json({
-        message: "Class not found",
+        message: "teacherId is required",
         status: "failed",
       });
+    } else {
+      const classData = await prisma.classes.findMany({
+        where: {
+          teacherId: body.userId,
+        },
+      });
+      console.log(classData);
+      if (!classData) {
+        return NextResponse.json({
+          message: "Class not found",
+          status: "failed",
+        });
+      }
+      return NextResponse.json({
+        message: "Class found",
+        status: "success",
+        data: classData,
+      });
     }
-    return NextResponse.json({
-      message: "Class found",
-      status: "success",
-      data: classData,
-    });
   } catch (err) {
     console.log(err);
     return NextResponse.json({
