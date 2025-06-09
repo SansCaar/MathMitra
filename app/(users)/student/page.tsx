@@ -22,13 +22,6 @@ import { JoinClassDialog } from "@components/student/join-class-dialog";
 import { useAtomValue, useSetAtom } from "jotai";
 import { fetchClasses, MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
 import { useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@components/ui/dialog";
-
 // Types
 
 interface Assignment {
@@ -56,7 +49,6 @@ export default function StudentDashboard() {
   const setClasses = useSetAtom(MyClassesAtom);
   const user = useAtomValue(UserAtom);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
   const fetchAssignments = async () => {
     const response = await fetch("/api/assignments/viewAll", {
@@ -97,58 +89,26 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-10">
-        {/* Header Section with Stats */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-xl flex items-center justify-center">
-                  <User className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                Welcome back, {user?.name}! 👋
-              </h1>
-              <p className="text-base md:text-lg text-gray-600">
-                Here's what's happening with your studies today.
-              </p>
+      <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-xl flex items-center justify-center">
+              <User className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <div className="flex gap-4">
-              <div className="bg-blue-50 rounded-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-blue-600 font-medium">
-                    Active Classes
-                  </p>
-                  <p className="text-xl font-bold text-blue-900">
-                    {classes?.length || 0}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-green-50 rounded-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Target className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-green-600 font-medium">
-                    Assignments
-                  </p>
-                  <p className="text-xl font-bold text-green-900">
-                    {assignments?.length || 0}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+            Welcome back, {user?.name}! 👋{" "}
+          </h1>
+          <p className="text-base md:text-lg text-gray-600">
+            Here's what's happening with your studies today.
+          </p>
         </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Playground */}
-          <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2">
-            <CardContent className="px-6 py-8 h-full flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
+          <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2 ">
+            <CardContent className="px-4 md:px-6  h-full flex flex-col">
+              <div className="flex items-center gap-4 ">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <Play className="w-6 h-6 text-white" />
                 </div>
@@ -161,73 +121,56 @@ export default function StudentDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 flex items-end">
-                <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12">
-                  <Code className="w-5 h-5 mr-2" />
-                  Start Practicing
-                </Button>
-              </div>
+              <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 justify-self-end  mt-auto ">
+                <Code className="w-5 h-5 mr-2" />
+                Start Practicing
+              </Button>
             </CardContent>
           </Card>
 
           {/* Join Class */}
-          <Card
-            className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-            onClick={() => setIsJoinDialogOpen(true)}
-          >
-            <CardContent className="px-6 py-8">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                  <Users className="w-6 h-6 text-white" />
+          <JoinClassDialog>
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+              <CardContent className="px-4 md:px-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Join Class
+                    </h3>
+                    <p className="text-gray-600">
+                      Enter a class code to join a new class
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Join Class
-                  </h3>
-                  <p className="text-gray-600">
-                    Enter a class code to join a new class
-                  </p>
-                </div>
-              </div>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-12">
-                <Plus className="w-5 h-5 mr-2 text-white" />
-                Join Class
-              </Button>
-            </CardContent>
-          </Card>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-12">
+                  <Plus className="w-5 h-5 mr-2 text-white" />
+                  Join Class
+                </Button>
+              </CardContent>
+            </Card>
+          </JoinClassDialog>
         </div>
 
         {/* My Classes Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">My Classes</h2>
-              <p className="text-gray-600 mt-1">
-                Manage and access your enrolled classes
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" size="sm" className="rounded-xl">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </Button>
-              <Button
-                size="sm"
-                className="rounded-xl bg-green-600 hover:bg-green-700 text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                New Class
-              </Button>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900">My Classes</h2>
+            <Button variant="outline" size="sm" className="rounded-xl">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {classes?.map((classItem) => (
               <Card
                 key={classItem.id}
-                className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow"
+                className="border-0 shadow-lg rounded-2xl overflow-hidden"
               >
-                <CardHeader className="bg-white border-b border-gray-100 p-6">
+                <CardHeader className="bg-white border-b border-gray-100">
                   <div className="flex items-center justify-between">
                     <div>
                       <Badge className="bg-blue-100 text-blue-800 mb-2">
@@ -236,7 +179,7 @@ export default function StudentDashboard() {
                       <CardTitle className="text-lg font-bold text-gray-900">
                         {classItem.name}
                       </CardTitle>
-                      <p className="text-gray-600 text-sm mt-1">
+                      <p className="text-gray-600 text-sm">
                         {classItem.description}
                       </p>
                     </div>
@@ -245,8 +188,8 @@ export default function StudentDashboard() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-6">
+                <CardContent className="px-6 bg-white">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Users className="w-4 h-4" />
@@ -263,47 +206,116 @@ export default function StudentDashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-3">
-                    <Button
-                      className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
-                      onClick={() =>
-                        router.push(
-                          `/student/classes/${classItem?.id}/assignments`
-                        )
-                      }
-                    >
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      View Assignments
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="rounded-xl"
-                      onClick={() =>
-                        router.push(`/student/classes/${classItem?.id}`)
-                      }
-                    >
-                      <Users className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
+                    onClick={() =>
+                      router.push(
+                        `/student/classes/${classItem?.id}/assignments`
+                      )
+                    }
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    View Assignments
+                  </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
 
-        {/* Dialog */}
-        <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">
-                Join a Class
-              </DialogTitle>
-            </DialogHeader>
-            <JoinClassDialog onJoinClass={handleClassJoin}>
-              <div className="hidden" />
-            </JoinClassDialog>
-          </DialogContent>
-        </Dialog>
+        {/* Recent Assignments Section */}
+        {/* <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Recent Assignments
+            </h2>
+            <Button variant="outline" size="sm" className="rounded-xl">
+              View All
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {assignments.map((assignment) => (
+              <Card
+                key={assignment.id}
+                className="border-0 shadow-lg rounded-2xl overflow-hidden"
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900">
+                          {assignment.title}
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 mb-3">
+                        {assignment.className}
+                      </p>
+                      <div className="flex items-center gap-6 text-sm text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>Due {assignment.dueDate}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Target className="w-4 h-4" />
+                          <span>
+                            {assignment.completedQuestions}/
+                            {assignment.questionCount} questions
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>Created {assignment.createdDate}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <div className="text-sm font-medium text-gray-900">
+                          {getProgressPercentage(
+                            assignment.completedQuestions,
+                            assignment.questionCount
+                          )}
+                          % Complete
+                        </div>
+                        <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
+                          <div
+                            className="bg-primary h-2 rounded-full"
+                            style={{
+                              width: `${getProgressPercentage(
+                                assignment.completedQuestions,
+                                assignment.questionCount
+                              )}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                      <Button
+                        className={`rounded-xl font-semibold ${
+                          assignment.status === "completed"
+                            ? "bg-green-100 hover:bg-green-200 text-green-800"
+                            : "bg-primary hover:bg-blue-600 text-white"
+                        }`}
+                      >
+                        {assignment.status === "completed" ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Review
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4 mr-2" />
+                            Continue
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div> */}
       </div>
     </div>
   );
