@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
   console.log(JWT_TOKEN);
   try {
     const body = await req.json();
-
-    if (!body.email || !body.password) {
+    console.log(body);
+    if (!body.email || !body.password || (body.role != 'student' && body.role !='teacher')) {
       return NextResponse.json(
         { message: "Fields are Required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     console.log(body);
@@ -23,16 +23,24 @@ export async function POST(req: NextRequest) {
     if (!serverToken) {
       return NextResponse.json(
         { message: "Invalid Server Token" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const userExists = await prisma.student.findFirst({
-      where: {
-        email: body.email,
-      },
-    });
+    const userExists =
+      body.role == "student"
+        ? await prisma.student.findFirst({
+            where: {
+              email: body.email,
+            },
+          })
+        : await prisma.teacher.findFirst({
+            where: {
+              email: body.email,
+            },
+          });
     console.log(userExists);
+
     if (userExists) {
       let compare = await bcrypt.compare(body.password, userExists.password);
       if (compare) {
@@ -45,13 +53,14 @@ export async function POST(req: NextRequest) {
           serverToken,
           {
             expiresIn: "10d",
-          }
+          },
         );
 
         return NextResponse.json({
           message: "success",
           status: "success",
           token: userToken,
+          user: userExists,
         });
       } else {
         return NextResponse.json({
