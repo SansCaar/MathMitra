@@ -68,6 +68,14 @@ const BottomInputSection = () => {
         >
           <SendHorizontal className="h-5 w-5" />
         </Button>
+
+        <Button
+          onClick={handleSubmit}
+          variant={"outline"}
+          className="h-10 w-10 p-0 flex-shrink-0"
+        >
+          <SendHorizontal className="h-5 w-5" />
+        </Button>
       </div>
     </form>
   );

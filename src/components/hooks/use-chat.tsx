@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { useAtomValue, useSetAtom } from "jotai";
-import { getImageBlob, getImageDataUrl } from "@dgmjs/export";
+import { getImageDataUrl } from "@dgmjs/export";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
@@ -18,7 +18,7 @@ export const useChat = () => {
   const setTextBoxValue = useSetAtom(TextBoxAtom);
   const canvasEditor = useAtomValue(CanvasAtom);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (type: "suggestion" | "nextStep") => {
     const responseId = uuid();
     addMessage({
       user: "Test",
@@ -31,8 +31,8 @@ export const useChat = () => {
     setTextBoxValue("");
 
     const imageData = await exportImage();
-    const jsonPaths = await exportJsonPaths();
-    const imageBlob = await exportImageBlob();
+    {/* const jsonPaths = await exportJsonPaths();
+    const imageBlob = await exportImageBlob(); */}
 
     const chatsocket = sockets.chatSocket;
 
@@ -40,12 +40,14 @@ export const useChat = () => {
       console.log("socket connected");
     });
 
-    const contextData = [
-      {
-        previousMessages: chat.messages,
-        canvasData: imageData,
-      },
-    ];
+    const contextData = {
+      previousMsg: chat.messages,
+      canvasData: imageData,
+      currentMsg: textBoxValue,
+      type,
+      // TODO: bright question from the url param
+      question: 
+    };
 
     chatsocket?.emit("chat_message", textBoxValue, contextData);
 
@@ -75,7 +77,8 @@ export const useChat = () => {
     return dataImage;
   };
 
-  const exportImageBlob = async () => {
+  {
+    /* const exportImageBlob = async () => {
     if (!canvasEditor) return;
     const dataImage = await getImageBlob(
       canvasEditor.canvas,
@@ -86,12 +89,15 @@ export const useChat = () => {
 
     return dataImage;
   };
-
-  const exportJsonPaths = async () => {
+*/
+  }
+  {
+    /* const exportJsonPaths = async () => {
     if (!canvasEditor) return;
     const json = await canvasEditor.saveToJSON();
     return json;
-  };
+  }; */
+  }
 
   const addMessage = ({
     message,

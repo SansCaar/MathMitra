@@ -16,13 +16,30 @@ export let io = new Server(server, {
 io.of("/chat").on("connection", (socket) => {
   socket.on(
     "chat_message",
-    async (currentMessage: string, previousMessages: TMessage) => {
+    async (data: {
+      previousMsg : TMessage[],
+      canvasData: string,
+      currentMsg: string,
+      question: string,
+      type: "suggestion" | "nextStep",
+    }) => {
       const d = await generateAnswerStream({
-        /* TODO: Add correct formatting here */
         contents: `
-            Here is what is the current message:
-            ${currentMessage}`,
-        type: "suggestion",
+          <question> 
+          ${data.currentMsg}
+          </question>
+          <current>
+                  ${data.currentMsg}
+          </current>
+          <context>
+          <previous>
+          ${JSON.stringify(data.previousMsg)}
+          </previous>
+          <canvas>
+          ${data.canvasData}
+          </canvas>
+          </context>`,
+        type: data.type,
       });
 
       let response: string = "";

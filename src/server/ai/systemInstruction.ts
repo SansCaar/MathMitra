@@ -60,7 +60,7 @@ export const SYSTEM_INSTRUCTIONS = {
                   the current user's message. Make sure not to go off topic.
                   And the canvas data url is provided enclosed in between the <canvas></canvas> tags.
                 </context>`,
-  default: ``,
+
   reportGen: `You are a mathematics teacher assessing a student's work. You are analyzing handwritten mathematical work.
             Based on the questions and the handwritten solutions, together with hints used, create a student's report for this specific assignment.
             Report should include:
