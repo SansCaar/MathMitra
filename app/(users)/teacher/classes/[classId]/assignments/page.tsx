@@ -113,6 +113,7 @@ export default function ClassAssignments({
   params: { classId: string };
 }) {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [questions, setQuestions] = useState<Record<string, Question[]>>({});
   const user = useAtomValue(UserAtom);
   const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
@@ -120,18 +121,52 @@ export default function ClassAssignments({
 
   useEffect(() => {
     const getAssinments = async (classCode: string) => {
-      alert(classCode);
       if (!classCode) return;
-      const response = await axios.post("/api/assignments/viewAll", {
-        classCode: classCode,
-        returnResBy: "classCode",
-      });
-      console.log(response);
-      setAssignments(response.data.body);
+      try {
+        const response = await axios.post("/api/assignments/viewAll", {
+          classCode: classCode,
+          returnResBy: "classCode",
+        });
+        setAssignments(response.data.body);
+      } catch (error) {
+        console.error("Error fetching assignments:", error);
+      }
     };
 
-    getAssinments(myclassData?.classCode);
+    getAssinments(myclassData?.classCode || "");
   }, [myclassData]);
+
+  useEffect(() => {
+    const getQuestions = async () => {
+      if (assignments.length === 0) return;
+
+      try {
+        const questionsPromises = assignments.map(async (assignment) => {
+          console.log(assignment.id);
+          const response = await axios.post("/api/questions/viewAll", {
+            assignmentId: assignment.id,
+            groupBy: "assignmentId",
+          });
+          return { assignmentId: assignment.id, questions: response.data.body };
+        });
+
+        const results = await Promise.all(questionsPromises);
+        const newQuestions = results.reduce(
+          (acc, { assignmentId, questions }) => {
+            acc[assignmentId] = questions;
+            return acc;
+          },
+          {} as Record<string, Question[]>
+        );
+
+        setQuestions(newQuestions);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+
+    getQuestions();
+  }, [assignments]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -262,7 +297,7 @@ export default function ClassAssignments({
 
         {/* Assignments Grid */}
         <div className="grid grid-cols-1 gap-4">
-          {sortedAssignments.map((assignment) => (
+          {assignments.map((assignment) => (
             <Card
               key={assignment.id}
               className="hover:shadow-lg transition-all duration-200 border-0"
@@ -273,15 +308,15 @@ export default function ClassAssignments({
                     <div className="flex items-center gap-2 mb-2">
                       <Badge
                         variant="secondary"
-                        className={getSubjectColor(mockClassData.subject)}
+                        className={getSubjectColor(myclassData?.subject || "")}
                       >
-                        {mockClassData.subject}
+                        {myclassData?.subject}
                       </Badge>
                       <Badge
                         variant="secondary"
                         className="bg-blue-100 text-blue-800"
                       >
-                        {assignment.questions.length} Questions
+                        {questions[assignment.id]?.length || 0} Questions
                       </Badge>
                     </div>
                     <CardTitle className="text-xl font-semibold text-gray-900 mb-2">
@@ -316,7 +351,9 @@ export default function ClassAssignments({
                     </div>
                     <div className="flex items-center space-x-1">
                       <Users className="h-4 w-4" />
-                      <span>{assignment.submissionsCount} submissions</span>
+                      <span>
+                        {assignment.submissionsCount || 0} submissions
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center space-x-1">
@@ -331,7 +368,7 @@ export default function ClassAssignments({
                     Questions
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {assignment.questions.map((question) => (
+                    {questions[assignment.id]?.map((question) => (
                       <div
                         key={question.id}
                         className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:border-gray-300 transition-colors"
@@ -352,13 +389,19 @@ export default function ClassAssignments({
                                 variant="secondary"
                                 className="bg-blue-100 text-blue-800"
                               >
-                                {question.submissionsCount} submissions
+                                {question.submissionsCount || 0} submissions
                               </Badge>
                             </div>
                           </div>
                         </div>
                       </div>
                     ))}
+                    {(!questions[assignment.id] ||
+                      questions[assignment.id].length === 0) && (
+                      <div className="col-span-2 text-center py-4 text-gray-500">
+                        No questions added yet
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardContent>

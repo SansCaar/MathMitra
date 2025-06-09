@@ -12,17 +12,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         body: "ok",
       });
     }
-    if (!body.teacherId) {
-      return NextResponse.json({
-        message: "Fields are Required",
-        status: "failed",
-        body: "ok",
-      });
-    }
+
     let groupBy = body.groupBy;
-    if (!groupBy) {
-      groupBy = "classCode";
-    }
+    console.log(body);
     if (groupBy === "classCode") {
       const classData = await prisma.question.findMany({
         where: {
@@ -60,11 +52,13 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       });
     }
     if (groupBy === "assignmentId") {
+      console.log("groupBy assignmentId");
       const classData = await prisma.question.findMany({
         where: {
           assignmentId: body.assignmentId,
         },
       });
+
       if (!classData) {
         return NextResponse.json({
           message: "Class not found",
