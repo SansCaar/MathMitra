@@ -17,20 +17,13 @@ export const SYSTEM_INSTRUCTIONS = {
                   - DO NOT use \\begin{align}, \\begin{equation}, or similar environments
                   - Use simple line breaks and \\[ \\] for multiple lines instead
 
-              <context>
-                  Previous messages are provided as part of context: 
-                  Keep in mind that:
-                  This is the entire data of the current chat.
-                  It has a messages array that contains the messages from the "modal" and the "user"
-                  It has some states as well, which are the state of the chat area which can be ignored.
-                  It will be provided as a prompt to you. enclosed in between the 
-                  <pervious></previous>
-
-                  The user is also given a canvas editor where they can also solve the problems,
-                  keep in mind that it is "EXTREMELY IMPORTANT" that you keep an eye on the canvas for the context and 
-                  the current user's message. Make sure not to go off topic.
-                  And the canvas data url is provided enclosed in between the <canvas></canvas> tags.
-                </context>`,
+                Here is how the question/assignment is and the process so far presented:
+                  - <question></question> if not present, then try to guess the problem from the <context></context>
+                  - <previous></previous> previous message converstations in the same chat between USER and the MODAL 
+                  - <current></current> the current message of the user.
+                  - <canvas></canvas> the canvas data url of the canvas that is being edited by the user. "MAKE SURE TO KEEP AN EYE ON IT. 
+                    MAKE TAKE THE CONTENT IN IT INTO HIGHER DETAIL."
+              `,
 
   nextStep: `You are helping a student solve a math problem. Suggest the next step.
                       Be concise but do not give out the full solution. Only give the next mini-step. 
@@ -46,20 +39,12 @@ export const SYSTEM_INSTRUCTIONS = {
                       - Use simple line breaks and \\[ \\] for multiple lines instead
                       - Directly give the next step without using phrases like here's the next step.
 
-              <context>
-                  Previous messages are provided as part of context: 
-                  Keep in mind that:
-                  This is the entire data of the current chat.
-                  It has a messages array that contains the messages from the "modal" and the "user"
-                  It has some states as well, which are the state of the chat area which can be ignored.
-                  It will be provided as a prompt to you. enclosed in between the 
-                  <pervious></previous>
-
-                  The user is also given a canvas editor where they can also solve the problems,
-                  keep in mind that it is "EXTREMELY IMPORTANT" that you keep an eye on the canvas for the context and 
-                  the current user's message. Make sure not to go off topic.
-                  And the canvas data url is provided enclosed in between the <canvas></canvas> tags.
-                </context>`,
+                Here is how the question/assignment is and the process so far presented:
+                  - <question></question> if not present, then try to guess the problem from the <context></context>
+                  - <previous></previous> previous message converstations in the same chat between USER and the MODAL 
+                  - <current></current> the current message of the user.
+                  - <canvas></canvas> the canvas data url of the canvas that is being edited by the user. "MAKE SURE TO KEEP AN EYE ON IT. 
+                    MAKE TAKE THE CONTENT IN IT INTO HIGHER DETAIL."`,
 
   reportGen: `You are a mathematics teacher assessing a student's work. You are analyzing handwritten mathematical work.
             Based on the questions and the handwritten solutions, together with hints used, create a student's report for this specific assignment.

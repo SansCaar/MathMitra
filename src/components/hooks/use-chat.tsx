@@ -3,11 +3,13 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { getImageDataUrl } from "@dgmjs/export";
 import { CanvasAtom } from "@src/atoms/CanvasAtom";
 import { io } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SocketsAtom } from "@src/atoms/SocketsAtom";
 import { CONSTANTS } from "@src/lib/constants";
 import TextBoxAtom from "@src/atoms/textBoxAtom";
 import ChatAtom from "@src/atoms/ChatAtom";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 export const useChat = () => {
   const chat = useAtomValue(ChatAtom);
@@ -17,6 +19,8 @@ export const useChat = () => {
   const textBoxValue = useAtomValue(TextBoxAtom);
   const setTextBoxValue = useSetAtom(TextBoxAtom);
   const canvasEditor = useAtomValue(CanvasAtom);
+  const questionId = useParams().question_id;
+  const [questionTitle, setQuestionTitle] = useState("");
 
   const handleSubmit = async (type: "suggestion" | "nextStep") => {
     const responseId = uuid();
@@ -31,8 +35,10 @@ export const useChat = () => {
     setTextBoxValue("");
 
     const imageData = await exportImage();
-    {/* const jsonPaths = await exportJsonPaths();
-    const imageBlob = await exportImageBlob(); */}
+    {
+      /* const jsonPaths = await exportJsonPaths();
+    const imageBlob = await exportImageBlob(); */
+    }
 
     const chatsocket = sockets.chatSocket;
 
@@ -45,8 +51,7 @@ export const useChat = () => {
       canvasData: imageData,
       currentMsg: textBoxValue,
       type,
-      // TODO: bright question from the url param
-      question: 
+      question: questionTitle,
     };
 
     chatsocket?.emit("chat_message", textBoxValue, contextData);
@@ -145,6 +150,23 @@ export const useChat = () => {
       return;
     }
   }, []);
+
+  useEffect(() => {
+    let title = "";
+    (async () => {
+      try {
+        title =
+          (
+            await axios.post(`/api/questions/viewOne`, {
+              questionId: questionId,
+            })
+          )?.data.title ?? "";
+      } catch (err) {
+        title = "Playground";
+      }
+      setQuestionTitle(title);
+    })();
+  }, [questionId]);
 
   return {
     handleSubmit,

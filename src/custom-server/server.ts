@@ -17,21 +17,21 @@ io.of("/chat").on("connection", (socket) => {
   socket.on(
     "chat_message",
     async (data: {
-      previousMsg : TMessage[],
-      canvasData: string,
-      currentMsg: string,
-      question: string,
-      type: "suggestion" | "nextStep",
+      previousMsg: TMessage[];
+      canvasData: string;
+      currentMsg: string;
+      question?: string;
+      type: "suggestion" | "nextStep";
     }) => {
       const d = await generateAnswerStream({
         contents: `
           <question> 
           ${data.currentMsg}
           </question>
-          <current>
-                  ${data.currentMsg}
-          </current>
           <context>
+          <current>
+            ${data.currentMsg}
+          </current>
           <previous>
           ${JSON.stringify(data.previousMsg)}
           </previous>
