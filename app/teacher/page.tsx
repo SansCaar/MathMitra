@@ -18,7 +18,6 @@ export default function TeacherDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    alert(process.env.NEXT_PUBLIC_HEY);
     const fetchClasses = async () => {
       try {
         const response = await fetch("/api/classes/fetchClasses", {

@@ -5,9 +5,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Plus, BookOpen, Users } from "lucide-react";
 import { CreateClassDialog, type ClassFormData } from "./create-class-dialog";
-import {
-  CreateAssignmentDialog,
-} from "./create-assignment-dialog";
+
 import { useToast } from "../hooks/use-toast";
 import type { Class } from "./my-classes";
 import Link from "next/link";
@@ -54,16 +52,16 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
                 </p>
 
                 <Link
-                  href="/teacher/assignments/create"
-                  >
-                <Button
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                  onClick={() => setIsAssignmentDialogOpen(true)}
+                  href={{
+                    pathname: "/teacher/assignments/create",
+                    query: { classes: JSON.stringify(classes) },
+                  }}
                 >
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Assignment
-                </Button>
-                  </Link>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Assignment
+                  </Button>
+                </Link>
               </div>
             </div>
           </CardContent>
@@ -100,7 +98,6 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
         onOpenChange={setIsClassDialogOpen}
         onCreateClass={handleCreateClass}
       />
-
     </>
   );
 }
