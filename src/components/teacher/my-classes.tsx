@@ -96,8 +96,8 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {classesWithCounts.map((cls) => (
-            <Card key={cls.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2 pt-4 px-4">
+              <Card key={cls.id} className="hover:shadow-md transition-shadow gap-2">
+              <CardHeader className=" pt-4 px-4">
                 <div className="flex items-start justify-between">
                   <div className="w-full">
                     <div className="flex items-center justify-between w-full mb-1">
@@ -128,7 +128,7 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
                   </p>
                 )}
               </CardContent>
-              <CardFooter className="pt-0 px-4">
+              <CardFooter className="pt-0 px-4 mt-auto">
                 <div className="flex items-center justify-between w-full text-sm">
                   <div className="flex items-center space-x-1 text-slate-600">
                     <Users className="h-4 w-4" />
@@ -136,7 +136,7 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
                   </div>
                   <div className="flex items-center space-x-1 text-slate-600">
                     <FileText className="h-4 w-4" />
-                    <span>{cls.assignmentsCount} assignments</span>
+                    <span>{cls.assignmentsCount} submissions</span>
                   </div>
                 </div>
               </CardFooter>

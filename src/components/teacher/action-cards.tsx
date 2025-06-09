@@ -7,10 +7,10 @@ import { Plus, BookOpen, Users } from "lucide-react";
 import { CreateClassDialog, type ClassFormData } from "./create-class-dialog";
 import {
   CreateAssignmentDialog,
-  type AssignmentFormData,
 } from "./create-assignment-dialog";
 import { useToast } from "../hooks/use-toast";
 import type { Class } from "./my-classes";
+import Link from "next/link";
 
 interface ActionCardsProps {
   classes: Class[];
@@ -36,18 +36,6 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
     });
   };
 
-  const handleCreateAssignment = (assignmentData: AssignmentFormData) => {
-    // In a real app, you would save this to your backend
-    // For now, we'll just show a toast notification
-
-    const selectedClass = classes.find((c) => c.id === assignmentData.classId);
-
-    toast({
-      title: "Assignment created",
-      description: `${assignmentData.title} has been created for ${selectedClass?.name}.`,
-    });
-  };
-
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -64,6 +52,10 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
                 <p className="text-sm text-slate-600 mb-4">
                   Design and distribute new assignments to your students
                 </p>
+
+                <Link
+                  href="/teacher/assignments/create"
+                  >
                 <Button
                   className="w-full bg-blue-600 hover:bg-blue-700"
                   onClick={() => setIsAssignmentDialogOpen(true)}
@@ -71,6 +63,7 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
                   <Plus className="mr-2 h-4 w-4" />
                   New Assignment
                 </Button>
+                  </Link>
               </div>
             </div>
           </CardContent>
@@ -91,7 +84,6 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
                 </p>
                 <Button
                   className="w-full bg-green-600 hover:bg-green-700"
-                  onClick={() => setIsClassDialogOpen(true)}
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   New Class
@@ -106,16 +98,6 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
         open={isClassDialogOpen}
         onOpenChange={setIsClassDialogOpen}
         onCreateClass={handleCreateClass}
-      />
-
-      <CreateAssignmentDialog
-        open={isAssignmentDialogOpen}
-        onOpenChange={setIsAssignmentDialogOpen}
-        onCreateAssignment={handleCreateAssignment}
-        classes={classes.map((c) => ({
-          id: c.id,
-          name: `${c.name} (${c.section})`,
-        }))}
       />
     </>
   );
