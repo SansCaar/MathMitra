@@ -13,6 +13,7 @@ import {
   FileText,
   BookOpen,
   GraduationCap,
+  ArrowRight,
 } from "lucide-react";
 import React, { useState } from "react";
 import {
@@ -45,20 +46,18 @@ interface Assignment {
   submissionsCount: number;
 }
 
-
 export default function ClassAssignments({
   params,
 }: {
   params: { classId: string };
 }) {
-
-  const {classId} = React.use(params);
+  const { classId } = React.use(params);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [questions, setQuestions] = useState<Record<string, Question[]>>({});
   const user = useAtomValue(UserAtom);
   const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
-  const myclassData = classes?.find((c) => c.id ===classId);
+  const myclassData = classes?.find((c) => c.id === classId);
   console.log(myclassData?.studentId);
 
   useEffect(() => {
@@ -98,7 +97,7 @@ export default function ClassAssignments({
             acc[assignmentId] = questions;
             return acc;
           },
-          {} as Record<string, Question[]>
+          {} as Record<string, Question[]>,
         );
 
         setQuestions(newQuestions);
@@ -138,7 +137,6 @@ export default function ClassAssignments({
   const handleBack = () => {
     router.back();
   };
-
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -189,7 +187,7 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Students</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {myclassData?.studentId.length??  0}
+                    {myclassData?.studentId.length ?? 0}
                   </p>
                 </div>
               </div>
@@ -261,12 +259,6 @@ export default function ClassAssignments({
                       <Calendar className="h-4 w-4" />
                       <span>Due {formatDate(assignment.dueDate)}</span>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4" />
-                      <span>
-                        {assignment.submissionsCount || 0} submissions
-                      </span>
-                    </div>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
@@ -297,14 +289,15 @@ export default function ClassAssignments({
                               >
                                 Answer: {question.answer}
                               </Badge>
-                              <Badge
-                                variant="secondary"
-                                className="bg-blue-100 text-blue-800"
-                              >
-                                {question.submissionsCount || 0} submissions
-                              </Badge>
                             </div>
                           </div>
+                          <Button
+                            onClick={() => {
+                            router.push(`/${question.id}/playground`)
+                            }}
+                            className="flex h-full aspect-square items-center justify-between bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl">
+                            <ArrowRight className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     ))}

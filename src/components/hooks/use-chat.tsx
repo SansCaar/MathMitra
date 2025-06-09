@@ -26,8 +26,7 @@ export const useChat = () => {
             await axios.post(`/api/questions/viewOne`, {
               questionId: slug,
             })
-          )?.data.title ?? "Playground";
-        console.log(title);
+          )?.data.body?.question ?? "Playground";
       } catch (err) {
         title = "Playground";
       }
