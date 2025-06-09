@@ -1,13 +1,11 @@
-
-
 import { TeacherHeader } from "@components/teacher/teacher-header";
 
 interface TeacherLayoutProps {
   children: React.ReactNode;
 }
-const layout = ({children}:TeacherLayoutProps) => {
+const layout = ({ children }: TeacherLayoutProps) => {
   const teacherData = {
-    id: "121323",
+    id: " 1323",
     name: "Dr. Sarah Johnson",
     email: "sarah.johnson@school.edu",
   };
@@ -18,9 +16,8 @@ const layout = ({children}:TeacherLayoutProps) => {
         teacherEmail={teacherData.email}
       />
       {children}
-        
     </div>
-  )
-}
+  );
+};
 
-export default layout
+export default layout;

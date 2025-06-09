@@ -123,7 +123,7 @@ export default function CreateAssignment() {
         throw new Error("No classes available");
       }
 
-      const classData = classes.find((c) => c.id === selectedClass);
+      const classData = classes.find((c) => c?.id === selectedClass);
       if (!classData) {
         throw new Error("Selected class not found");
       }
@@ -142,10 +142,12 @@ export default function CreateAssignment() {
         }
       );
 
+      console.log(CreateAssignmentResponse?.data?.body?.id);
+
       await Promise.all(
-        questions.map(async (question) => {
+        questions?.map(async (question) => {
           const createQuestion = await axios.post("/api/questions/create", {
-            assignmentId: CreateAssignmentResponse.data.body.id,
+            assignmentId: CreateAssignmentResponse?.data?.body?.id,
             teacherId: user?.id,
             classCode: classData.classCode,
             submissionsCount: 0,
