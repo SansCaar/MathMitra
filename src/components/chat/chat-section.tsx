@@ -32,9 +32,9 @@ const ChatSection = () => {
               </div>
             ) : null}
 
-            <div>
+            <div className="flex flex-col gap-2">
               {!isTranscription && !message.message ? (
-                <div className="px-2 text-sm text-gray-500">
+                <div className="px-2 text-sm text-neutral-400">
                   Took a look at the canvas and the probable questions.
                 </div>
               ) : null}
