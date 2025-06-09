@@ -51,13 +51,11 @@ export function ActionCards({ classes, onClassCreated }: ActionCardsProps) {
                   Design and distribute new assignments to your students
                 </p>
 
-                <Link
-                  href={{
-                    pathname: "/teacher/assignments/create",
-                    query: { classes: JSON.stringify(classes) },
-                  }}
-                >
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Link href="/teacher/assignments/create">
+                  <Button
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => setIsAssignmentDialogOpen(true)}
+                  >
                     <Plus className="mr-2 h-4 w-4" />
                     New Assignment
                   </Button>
