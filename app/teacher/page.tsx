@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TeacherHeader } from "../../src/components/teacher/teacher-header";
 import { MyClasses } from "../../src/components/teacher/my-classes";
 import { RecentAssignments } from "../../src/components/teacher/recent-assignments";
@@ -9,42 +9,41 @@ import { ActionCards } from "../../src/components/teacher/action-cards";
 
 export default function TeacherDashboard() {
   const teacherData = {
+    id: "121323",
     name: "Dr. Sarah Johnson",
     email: "sarah.johnson@school.edu",
   };
 
-  // Sample classes for demonstration
-  const [classes, setClasses] = useState<Class[]>([
-    {
-      id: "class-1",
-      name: "Mathematics 101",
-      subject: "Mathematics",
-      section: "A",
-      description:
-        "Introduction to algebra, geometry, and calculus fundamentals",
-      studentsCount: 28,
-      assignmentsCount: 5,
-    },
-    {
-      id: "class-2",
-      name: "Physics Fundamentals",
-      subject: "Science",
-      section: "B",
-      description:
-        "Basic principles of mechanics, thermodynamics, and electromagnetism",
-      studentsCount: 24,
-      assignmentsCount: 3,
-    },
-    {
-      id: "class-3",
-      name: "English Literature",
-      subject: "English",
-      section: "C",
-      description: "Analysis of classic and contemporary literary works",
-      studentsCount: 30,
-      assignmentsCount: 4,
-    },
-  ]);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch("/api/classes/fetchClasses", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ teacherId: "12345" }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+
+        const data = await response.json();
+        console.log("Fetched classes:", data.data);
+        setClasses(data.data);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchClasses();
+  }, [teacherData.id]);
 
   const handleClassCreated = (newClass: Class) => {
     setClasses((prev) => [...prev, newClass]);
@@ -69,7 +68,11 @@ export default function TeacherDashboard() {
 
         <ActionCards classes={classes} onClassCreated={handleClassCreated} />
 
-        <MyClasses classes={classes} onCreateClass={() => {}} />
+        {isLoading ? (
+          <div className="text-center py-8">Loading classes...</div>
+        ) : (
+          <MyClasses classes={classes} onCreateClass={() => {}} />
+        )}
 
         <RecentAssignments />
       </main>

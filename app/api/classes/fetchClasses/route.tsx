@@ -16,6 +16,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         teacherId: body.teacherId,
       },
     });
+    console.log(classData);
     if (!classData) {
       return NextResponse.json({
         message: "Class not found",
@@ -25,7 +26,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     return NextResponse.json({
       message: "Class found",
       status: "success",
-      body: classData,
+      data: classData,
     });
   } catch (err) {
     console.log(err);

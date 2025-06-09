@@ -1,24 +1,36 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
-import { Users, MoreHorizontal, UserPlus, FileText } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Users, MoreHorizontal, UserPlus, FileText } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export interface Class {
-  id: string
-  name: string
-  subject: string
-  section: string
-  description: string
-  studentsCount?: number
-  assignmentsCount?: number
+  id: string;
+  name: string;
+  subject: string;
+  section: string;
+  description: string;
+  studentsCount?: number;
+  assignmentsCount?: number;
+  classCode?: string;
 }
 
 interface MyClassesProps {
-  classes: Class[]
-  onCreateClass: () => void
+  classes: Class[];
+  onCreateClass: () => void;
 }
 
 export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
@@ -27,7 +39,7 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
     ...cls,
     studentsCount: cls.studentsCount || Math.floor(Math.random() * 30) + 10,
     assignmentsCount: cls.assignmentsCount || Math.floor(Math.random() * 5),
-  }))
+  }));
 
   // Get subject color based on subject name for visual distinction
   const getSubjectColor = (subject: string) => {
@@ -40,13 +52,17 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
       Art: "bg-pink-100 text-pink-800 hover:bg-pink-200",
       Music: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200",
       "Physical Education": "bg-orange-100 text-orange-800 hover:bg-orange-200",
-    }
+    };
 
     // Find a match or partial match
-    const match = Object.keys(subjectMap).find((key) => subject.toLowerCase().includes(key.toLowerCase()))
+    const match = Object.keys(subjectMap).find((key) =>
+      subject.toLowerCase().includes(key.toLowerCase())
+    );
 
-    return match ? subjectMap[match] : "bg-slate-100 text-slate-800 hover:bg-slate-200"
-  }
+    return match
+      ? subjectMap[match]
+      : "bg-slate-100 text-slate-800 hover:bg-slate-200";
+  };
 
   return (
     <div className="mb-10">
@@ -63,9 +79,12 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
           <CardContent className="py-8">
             <div className="flex flex-col items-center justify-center text-center space-y-3">
               <Users className="h-12 w-12 text-slate-400" />
-              <h3 className="text-lg font-medium text-slate-900">No classes yet</h3>
+              <h3 className="text-lg font-medium text-slate-900">
+                No classes yet
+              </h3>
               <p className="text-sm text-slate-600 max-w-sm">
-                You haven't created any classes yet. Create your first class to start adding assignments.
+                You haven't created any classes yet. Create your first class to
+                start adding assignments.
               </p>
               <Button onClick={onCreateClass} className="mt-2">
                 <Users className="mr-2 h-4 w-4" />
@@ -78,38 +97,38 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {classesWithCounts.map((cls) => (
             <Card key={cls.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-2 pt-4 px-4">
                 <div className="flex items-start justify-between">
-                  <div>
-                    <Badge className={getSubjectColor(cls.subject)} variant="secondary">
-                      {cls.subject}
-                    </Badge>
-                    <CardTitle className="mt-2 text-base font-medium text-slate-900">{cls.name}</CardTitle>
-                    <p className="text-sm text-slate-600">Section {cls.section}</p>
+                  <div className="w-full">
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <Badge
+                        className={getSubjectColor(cls.subject)}
+                        variant="secondary"
+                      >
+                        {cls.subject}
+                      </Badge>
+                      <Badge className="bg-blue-500 text-white hover:bg-blue-600 ml-auto">
+                        Class Code: {cls?.classCode}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-base font-medium text-slate-900">
+                      {cls.name}
+                    </CardTitle>
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Details</DropdownMenuItem>
-                      <DropdownMenuItem>Edit Class</DropdownMenuItem>
-                      <DropdownMenuItem>Create Assignment</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">Archive Class</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
               </CardHeader>
-              <CardContent className="pb-3">
+              <CardContent className="pb-2 px-4">
                 {cls.description ? (
-                  <p className="text-sm text-slate-600 line-clamp-2">{cls.description}</p>
+                  <p className="text-sm text-slate-600 line-clamp-2">
+                    {cls.description}
+                  </p>
                 ) : (
-                  <p className="text-sm text-slate-500 italic">No description provided</p>
+                  <p className="text-sm text-slate-500 italic">
+                    No description provided
+                  </p>
                 )}
               </CardContent>
-              <CardFooter className="pt-0">
+              <CardFooter className="pt-0 px-4">
                 <div className="flex items-center justify-between w-full text-sm">
                   <div className="flex items-center space-x-1 text-slate-600">
                     <Users className="h-4 w-4" />
@@ -121,12 +140,8 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
                   </div>
                 </div>
               </CardFooter>
-              <div className="px-6 pb-4 flex space-x-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  <UserPlus className="mr-2 h-3 w-3" />
-                  Add Students
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+              <div className="px-4 pb-3">
+                <Button variant="outline" size="sm" className="w-full">
                   <FileText className="mr-2 h-3 w-3" />
                   Assignments
                 </Button>
@@ -136,5 +151,5 @@ export function MyClasses({ classes, onCreateClass }: MyClassesProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
