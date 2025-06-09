@@ -59,9 +59,10 @@ export function JoinClassDialog({
       const data = await res.json();
       console.log(data);
       if (data.data) {
+        
         setStatus({
-          type: "success",
-          message: `Successfully joined class with code ${joinClassCode}!`,
+          type: "error",
+          message:data.status =='failed'? 'Already Joined the class': `Successfully joined class with code ${joinClassCode}!`,
         });
         setJoinClassCode("");
         // Call the onJoinClass callback if provided

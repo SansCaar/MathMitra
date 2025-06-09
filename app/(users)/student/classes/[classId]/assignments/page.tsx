@@ -59,6 +59,7 @@ export default function ClassAssignments({
   const classes = useAtomValue(MyClassesAtom);
   const router = useRouter();
   const myclassData = classes?.find((c) => c.id ===classId);
+  console.log(myclassData?.studentId);
 
   useEffect(() => {
     const getAssinments = async (classCode: string) => {
@@ -188,7 +189,7 @@ export default function ClassAssignments({
                 <div>
                   <p className="text-sm text-gray-600">Students</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {myclassData?.studentCount ? myclassData?.studentCount : 0}
+                    {myclassData?.studentId.length??  0}
                   </p>
                 </div>
               </div>
