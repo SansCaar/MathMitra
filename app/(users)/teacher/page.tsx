@@ -34,6 +34,7 @@ export default function TeacherDashboard() {
       setIsLoading(false)
     );
   };
+  const combined = `To solve the quadratic equation, we use: \\( x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a} \\), which is valid for any quadratic.`;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -42,9 +43,6 @@ export default function TeacherDashboard() {
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             Welcome back, {user ? user?.name?.split(" ")[1] : "User"}! 👋
           </h1>
-          <p className="text-slate-600">
-            Here's what's happening with your classes today.
-          </p>
         </div>
 
         <ActionCards classes={classes} onClassCreated={handleClassCreated} />
