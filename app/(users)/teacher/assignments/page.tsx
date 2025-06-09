@@ -10,6 +10,7 @@ import {
   MoreHorizontal,
   Plus,
   ArrowLeft,
+  BarChart2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -145,7 +146,6 @@ export default function AllAssignments() {
               className="hover:shadow-md transition-shadow"
             >
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-base font-medium text-slate-900 mb-1">
                       {assignment.title}
@@ -154,14 +154,10 @@ export default function AllAssignments() {
                       {assignment.subject}
                     </p>
                   </div>
+                  <div className="flex gap-2 items-center">
+        
                   <div className="flex items-center space-x-2">
-                    <Badge
-                      variant="secondary"
-                      className={getStatusColor(assignment.status)}
-                    >
-                      {assignment.status.charAt(0).toUpperCase() +
-                        assignment.status.slice(1)}
-                    </Badge>
+                   
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -181,7 +177,6 @@ export default function AllAssignments() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                </div>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="flex items-center justify-between text-sm text-slate-600">

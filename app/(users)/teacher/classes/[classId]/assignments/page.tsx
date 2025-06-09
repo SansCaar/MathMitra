@@ -13,6 +13,7 @@ import {
   FileText,
   BookOpen,
   GraduationCap,
+  BarChart2,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -326,6 +327,18 @@ export default function ClassAssignments({
                       {assignment.description}
                     </p>
                   </div>
+                  <div className="flex items-center gap-4">
+                    <Button
+                      onClick={() =>
+                        router.push(
+                          `/teacher/assignments/${assignment.id}/report`
+                        )
+                      }
+                      className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
+                    >
+                      <BarChart2 className="w-4 h-4 mr-2" />
+                      See Report
+                    </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -340,6 +353,7 @@ export default function ClassAssignments({
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
