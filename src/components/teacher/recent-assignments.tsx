@@ -14,12 +14,8 @@ import { useAtomValue } from "jotai";
 import { UserAtom } from "@src/atoms/UserAtom";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-{
-  /*
 
-{"id":"6846abd4a2be85cb9e15fdf4","title":"Ok My new assignment","description":"Ok My new assignment","createdAt":"2025-06-09T09:39:32.100Z","updatedAt":"2025-06-09T09:39:32.100Z","classCode":1726,"teacherId":"684690a6ad0838b680756df3","dueDate":"2025-06-09T20:24","submissionCount":0,"questionId":null}
-*/
-}
+
 interface Assignment {
   id: string;
   title: string;
