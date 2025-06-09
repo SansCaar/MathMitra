@@ -203,9 +203,6 @@ export default function ClassAssignments({
     router.back();
   };
 
-  const handleNewAssignment = () => {
-    router.push(`/teacher/assignments/create?classId=${params.classId}`);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -230,13 +227,6 @@ export default function ClassAssignments({
               className="group border-black bg-transparent border-2 hover:bg-black p-4 aspect-square rounded-full"
             >
               <ArrowLeft className="w-6 h-6 text-black group-hover:text-white" />
-            </Button>
-            <Button
-              onClick={handleNewAssignment}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              New Assignment
             </Button>
           </div>
         </div>

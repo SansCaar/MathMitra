@@ -206,19 +206,6 @@ export default function StudentDashboard() {
                 Manage and access your enrolled classes
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" size="sm" className="rounded-xl">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </Button>
-              <Button
-                size="sm"
-                className="rounded-xl bg-green-600 hover:bg-green-700 text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                New Class
-              </Button>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -227,7 +214,7 @@ export default function StudentDashboard() {
                 key={classItem.id}
                 className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow"
               >
-                <CardHeader className="bg-white border-b border-gray-100 p-6">
+                <CardHeader className="bg-white border-b border-gray-100 px-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <Badge className="bg-blue-100 text-blue-800 mb-2">
@@ -245,8 +232,8 @@ export default function StudentDashboard() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-6">
+                <CardContent className="px-6">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Users className="w-4 h-4" />
@@ -263,7 +250,7 @@ export default function StudentDashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex ">
                     <Button
                       className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl"
                       onClick={() =>
@@ -274,15 +261,6 @@ export default function StudentDashboard() {
                     >
                       <BookOpen className="w-4 h-4 mr-2" />
                       View Assignments
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="rounded-xl"
-                      onClick={() =>
-                        router.push(`/student/classes/${classItem?.id}`)
-                      }
-                    >
-                      <Users className="w-4 h-4" />
                     </Button>
                   </div>
                 </CardContent>
