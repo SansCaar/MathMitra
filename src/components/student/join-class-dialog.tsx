@@ -16,8 +16,21 @@ import { Alert, AlertDescription } from "@components/ui/alert";
 import { Plus, CheckCircle, AlertCircle } from "lucide-react";
 import { UserAtom } from "@src/atoms/UserAtom";
 import { useAtomValue } from "jotai";
+import { ReactNode } from "react";
 
-export function JoinClassDialog() {
+interface JoinClassDialogProps {
+  children: ReactNode;
+  onJoinClass?: (classCode: number) => Promise<void>;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function JoinClassDialog({
+  children,
+  onJoinClass,
+  open,
+  onOpenChange,
+}: JoinClassDialogProps) {
   const user = useAtomValue(UserAtom);
   const [joinClassCode, setJoinClassCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
@@ -51,6 +64,10 @@ export function JoinClassDialog() {
           message: `Successfully joined class with code ${joinClassCode}!`,
         });
         setJoinClassCode("");
+        // Call the onJoinClass callback if provided
+        if (onJoinClass) {
+          await onJoinClass(Number(joinClassCode));
+        }
       } else {
         setStatus({
           type: "error",
@@ -76,13 +93,8 @@ export function JoinClassDialog() {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-12">
-          <Plus className="w-5 h-5 mr-2 text-white" />
-          Join Class
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Join a Class</DialogTitle>

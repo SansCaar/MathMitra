@@ -11,7 +11,6 @@ import { CreateClassDialog } from "@components/teacher/create-class-dialog";
 
 export default function TeacherDashboard() {
   const user = useAtomValue(UserAtom);
-  
 
   const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
 
