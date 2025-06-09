@@ -22,6 +22,7 @@ import { JoinClassDialog } from "@components/student/join-class-dialog";
 import { useAtomValue, useSetAtom } from "jotai";
 import { fetchClasses, MyClassesAtom, UserAtom } from "@src/atoms/UserAtom";
 import { useRouter } from "next/navigation";
+import { PracticeDialog } from "@components/student/practice-dialog";
 // Types
 
 interface Assignment {
@@ -49,6 +50,7 @@ export default function StudentDashboard() {
   const setClasses = useSetAtom(MyClassesAtom);
   const user = useAtomValue(UserAtom);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [isPracticeDialogOpen, setIsPracticeDialogOpen] = useState(false);
 
   const fetchAssignments = async () => {
     const response = await fetch("/api/assignments/viewAll", {
@@ -67,7 +69,6 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (!user) return;
-
     if (user?.id && user?.role) {
       fetchClasses({
         userId: user?.id,
@@ -77,15 +78,6 @@ export default function StudentDashboard() {
       fetchAssignments();
     }
   }, [user]);
-
-  const handleClassJoin = async (classCode: number) => {
-    fetchClasses({
-      userId: user?.id ?? "",
-      role: user?.role,
-      setMyClasses: setClasses,
-    });
-    fetchAssignments();
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -106,9 +98,9 @@ export default function StudentDashboard() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Playground */}
-          <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2 ">
-            <CardContent className="px-4 md:px-6  h-full flex flex-col">
-              <div className="flex items-center gap-4 ">
+          <Card className="border-0 flex-1 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow lg:col-span-2">
+            <CardContent className="px-4 md:px-6 h-full flex flex-col">
+              <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <Play className="w-6 h-6 text-white" />
                 </div>
@@ -121,7 +113,10 @@ export default function StudentDashboard() {
                   </p>
                 </div>
               </div>
-              <Button className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 justify-self-end  mt-auto ">
+              <Button
+                className="w-full bg-primary hover:bg-slate-800 text-white font-semibold rounded-xl h-12 justify-self-end mt-auto"
+                onClick={() => setIsPracticeDialogOpen(true)}
+              >
                 <Code className="w-5 h-5 mr-2" />
                 Start Practicing
               </Button>
@@ -225,6 +220,12 @@ export default function StudentDashboard() {
             ))}
           </div>
         </div>
+
+        {/* Practice Dialog */}
+        <PracticeDialog
+          open={isPracticeDialogOpen}
+          onOpenChange={setIsPracticeDialogOpen}
+        />
       </div>
     </div>
   );
