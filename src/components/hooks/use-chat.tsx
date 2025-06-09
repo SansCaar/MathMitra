@@ -43,7 +43,7 @@ export const useChat = () => {
     const contextData = [
       {
         previousMessages: chat.messages,
-        imageData: imageData,
+        canvasData: imageData,
       },
     ];
 

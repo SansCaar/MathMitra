@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 
 const ChatSection = () => {
   const chat = useAtomValue(ChatAtom);
+  const isGenerating = chat.states.isGenerating;
 
   return (
     <div className="flex-col flex gap-4  h-full flex-1 py-5  overflow-y-auto px-2.5">

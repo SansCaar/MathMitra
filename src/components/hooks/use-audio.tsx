@@ -26,6 +26,8 @@ const useAudio = () => {
   };
 
   const connectToAudioSocket = async () => {
+    if (audioSocket.current !== null) return;
+
     const webSocket = io(`${CONSTANTS.SOCKET_SERVER_API}/audio`);
     audioSocket.current = webSocket;
     console.log("New socket was created");
@@ -136,11 +138,33 @@ const useAudio = () => {
   const toggleMic = async () => {
     if (chatAtomValues.states.speaker) {
       await stopListeningToUserAudio();
+      setChatAtom((prev) => ({
+        ...prev,
+        states: {
+          ...prev.states,
+          isGenerating: true,
+          isLoading: true,
+          isMuted: true,
+          speaker: undefined,
+        },
+      }));
       return;
     }
 
+    setChatAtom((prev) => ({
+      ...prev,
+      states: {
+        ...prev.states,
+        isGenerating: false,
+        isLoading: false,
+        isMuted: false,
+        speaker: "user",
+      },
+    }));
+
     await connectToAudioSocket();
     await listenToUserAudio();
+
     updateTranscriptionDataState();
   };
 

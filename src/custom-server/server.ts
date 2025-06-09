@@ -19,8 +19,7 @@ io.of("/chat").on("connection", (socket) => {
       const d = await generateAnswerStream({
         /* TODO: Add correct formatting here */
         contents: `
-            Here are the previous Messages:
-            ${JSON.stringify(previousMessages)},
+            
 
             Here is what is the current message:
             ${currentMessage}`,
