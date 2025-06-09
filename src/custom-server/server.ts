@@ -55,18 +55,23 @@ let isCallbackSet = false;
 
 let audioNamespace = io.of("/audio");
 let isDisabled = false;
+let timeout: NodeJS.Timeout | undefined;
 
 audioNamespace.on("connection", async (socket) => {
   isDisabled = false;
   const audioId = uuid();
 
+  let initTime = 1
+
   if (!isCallbackSet) {
-    let timeout: NodeJS.Timeout | undefined;
     streamingRecognizer?.on("data", (data) => {
-      if (timeout) clearTimeout(timeout);
+      if (timeout !== undefined) {
+        clearTimeout(timeout);
+        timeout = undefined;
+      }
 
       timeout = setTimeout(() => {
-        socket.emit("timeout", audioId);
+        socket.emit("timeout", initTime++);
         streamingRecognizer?.end();
         isDisabled = true;
       }, 4_000);

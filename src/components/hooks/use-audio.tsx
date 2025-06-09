@@ -93,7 +93,8 @@ const useAudio = () => {
   };
 
   audioSocket?.current?.on("timeout", (audioId) => {
-    console.log("timeout", audioId);
+    // TODO: Probably call a function to handle the timeout and send
+    // response to ai.
   });
 
   function updateTranscriptionDataState() {
@@ -108,6 +109,7 @@ const useAudio = () => {
         response.data?.results?.forEach((result) => {
           const isFinal = result.isFinal;
           const transcript = result.alternatives[0].transcript;
+
           if (isFinal) final += `\n${transcript}`;
           else interim += transcript;
         });
