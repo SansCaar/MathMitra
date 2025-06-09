@@ -1,6 +1,7 @@
 import { TMessage } from "@src/atoms/ChatAtom";
 import { setupSteamingRecognition } from "@src/server/ai/audio";
 import { generateAnswerStream } from "@src/server/ai/genAi";
+import { generateTts } from "@src/server/ai/tts";
 import http from "http";
 import { Server } from "socket.io";
 
@@ -19,8 +20,6 @@ io.of("/chat").on("connection", (socket) => {
       const d = await generateAnswerStream({
         /* TODO: Add correct formatting here */
         contents: `
-            
-
             Here is what is the current message:
             ${currentMessage}`,
         type: "suggestion",

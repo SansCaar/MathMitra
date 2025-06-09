@@ -9,6 +9,7 @@ import {
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEN_AI_KEY,
+  vertexai: true,
 });
 
 export type tGenerateAnswerPropType = Partial<GenerateContentParameters> & {
@@ -25,13 +26,13 @@ const DEFAULT_MODAL = "gemini-2.5-flash-preview-05-20";
  * @deafult modal: gemini-2.5-flash-preview-05-20
  */
 export const generateAnswer = async (props: tGenerateAnswerPropType) => {
-  return await ai.models.generateContent({
+  return (await ai.models.generateContent({
     config: {
       systemInstruction: SYSTEM_INSTRUCTIONS[props.type || "default"],
     },
     model: DEFAULT_MODAL,
     ...props,
-  });
+  }));
 };
 
 /**
